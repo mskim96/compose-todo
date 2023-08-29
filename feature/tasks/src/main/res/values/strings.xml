@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search">Search</string>
+    <string name="placeholder_title">Title</string>
+    <string name="placeholder_description">Add Description</string>
+    <string name="placeholder_date_time">Add Date / Time</string>
+    <string name="placeholder_time">Add Time</string>
+
+    <string name="task_save">Save</string>
+
+    <!--    Snackbar Messages   -->
+    <string name="task_marked_completed">One task has been completed.</string>
+    <string name="task_marked_activate">One task has been marked as incomplete.</string>
+    <string name="completed_tasks_cleared">Completed tasks cleared.</string>
+    <string name="task_set_bookmarked">The task has been bookmarked.</string>
+    <string name="task_undo_bookmarked">Removed bookmark from the task.</string>
+
+    <string name="successfully_deleted_task_message">Task was delete.</string>
+</resources>
