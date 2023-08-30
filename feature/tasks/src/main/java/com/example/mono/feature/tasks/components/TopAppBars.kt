@@ -11,11 +11,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.feature.tasks.R
 import com.example.mono.core.designsystem.R as designSystemR
@@ -28,7 +28,12 @@ fun TasksTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     MonoTopAppBar(
-        titleRes = designSystemR.string.app_name,
+        title = {
+            Text(
+                text = stringResource(id = designSystemR.string.app_name),
+                fontWeight = FontWeight.ExtraBold
+            )
+        },
         modifier = modifier,
         actions = {
             IconButton(onClick = navigateToSearch) {
@@ -51,41 +56,8 @@ fun TasksTopAppBar(
 internal fun TaskDetailTopAppBar(
     onBackClick: () -> Unit,
     isBookmarked: Boolean,
-    updateBookmarked: () -> Unit,
-    onDeleteTask: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    MonoTopAppBar(
-        title = "",
-        modifier = modifier,
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-            }
-        },
-        actions = {
-            IconButton(onClick = updateBookmarked) {
-                val icon =
-                    if (isBookmarked) Icons.Default.Bookmarks else Icons.Outlined.Bookmarks
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null
-                )
-            }
-            IconButton(onClick = onDeleteTask) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun CreateTaskTopAppBar(
-    onBackClick: () -> Unit,
-    isBookmarked: Boolean,
     toggleBookmark: () -> Unit,
-    createNewTask: () -> Unit,
+    onDeleteTask: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val bookmarkedIcon = if (isBookmarked) {
@@ -109,8 +81,8 @@ internal fun CreateTaskTopAppBar(
                     contentDescription = null
                 )
             }
-            TextButton(onClick = createNewTask) {
-                Text(text = stringResource(id = R.string.task_save))
+            IconButton(onClick = onDeleteTask) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
             }
         }
     )

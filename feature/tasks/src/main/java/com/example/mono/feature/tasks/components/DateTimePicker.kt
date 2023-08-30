@@ -32,10 +32,10 @@ import java.time.LocalTime
 /**
  * [MonoDateTimePicker] A Composable with the added dependency of a Time Picker to a Date Picker.
  *
- * @param onDismiss
- * @param onConfirm
- * @param previousDate
- * @param previousTime
+ * @param onDismiss Called when the user tries to dismiss.
+ * @param onConfirm Called when the user confirm dialog action.
+ * @param previousDate previous date if it had date.
+ * @param previousTime previous time if it had time.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

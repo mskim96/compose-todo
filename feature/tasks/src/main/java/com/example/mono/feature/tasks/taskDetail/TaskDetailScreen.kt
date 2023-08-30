@@ -1,19 +1,20 @@
 package com.example.mono.feature.tasks.taskDetail
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Sort
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,14 +23,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mono.core.common.datetime.toFormattedDate
 import com.example.mono.core.common.datetime.toFormattedTime
-import com.example.mono.core.designsystem.component.MonoFloatingButton
 import com.example.mono.core.designsystem.component.MonoInputChip
-import com.example.mono.core.designsystem.component.MonoOutlinedTextField
+import com.example.mono.core.designsystem.component.MonoTextField
+import com.example.mono.core.designsystem.theme.MonoTheme
 import com.example.mono.feature.tasks.R
 import com.example.mono.feature.tasks.components.IconRow
 import com.example.mono.feature.tasks.components.MonoDateTimePicker
@@ -40,8 +42,6 @@ import java.time.LocalTime
 @Composable
 internal fun TaskDetailRoute(
     onBackClick: () -> Unit,
-    onUpdateTask: () -> Unit,
-    onDeleteTask: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TaskDetailViewModel = hiltViewModel()
 ) {
@@ -49,22 +49,18 @@ internal fun TaskDetailRoute(
 
     TaskDetailScreen(
         uiState = uiState,
-        onBackClick = onBackClick,
-        updateTask = viewModel::updateTask,
+        onUpdateTask = viewModel::updateTask,
         onDeleteTask = viewModel::deleteTask,
         updateTitle = viewModel::updateTitle,
         updateDescription = viewModel::updateDescription,
         updateDateTime = viewModel::updateDateTime,
+        updateCompleted = viewModel::updateCompleted,
+        toggleBookmark = viewModel::toggleBookmark,
         modifier = modifier
     )
-    LaunchedEffect(key1 = uiState.isTaskSaved) {
-        if (uiState.isTaskSaved) {
-            onUpdateTask()
-        }
-    }
-    LaunchedEffect(key1 = uiState.isTaskDeleted) {
-        if (uiState.isTaskDeleted) {
-            onDeleteTask()
+    LaunchedEffect(key1 = uiState) {
+        if(uiState.isTaskSaved || uiState.isTaskDeleted){
+            onBackClick()
         }
     }
 }
@@ -72,29 +68,37 @@ internal fun TaskDetailRoute(
 @Composable
 internal fun TaskDetailScreen(
     uiState: TaskDetailUiState,
-    onBackClick: () -> Unit,
+    onUpdateTask: () -> Unit,
     onDeleteTask: () -> Unit,
-    updateTask: () -> Unit,
     updateTitle: (title: String) -> Unit,
     updateDescription: (description: String) -> Unit,
     updateDateTime: (date: LocalDate?, time: LocalTime?) -> Unit,
+    updateCompleted: (Boolean) -> Unit,
+    toggleBookmark: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    BackHandler {
+        onUpdateTask()
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TaskDetailTopAppBar(
-                onBackClick = onBackClick,
+                onBackClick = onUpdateTask,
                 isBookmarked = uiState.isBookmarked,
-                updateBookmarked = { },
+                toggleBookmark = { toggleBookmark(!uiState.isBookmarked) },
                 onDeleteTask = onDeleteTask,
             )
         },
-        floatingActionButton = {
-            MonoFloatingButton(
-                icon = Icons.Default.EditNote,
-                onClick = updateTask,
-                modifier = Modifier.imePadding()
+        bottomBar = {
+            val markComplete = if (uiState.isCompleted) "Mark Active" else "Mark Complete"
+            BottomAppBar(
+                actions = {},
+                floatingActionButton = {
+                    TextButton(onClick = { updateCompleted(!uiState.isCompleted) }) {
+                        Text(text = markComplete, style = MaterialTheme.typography.titleSmall)
+                    }
+                }
             )
         }
     ) { padding ->
@@ -123,7 +127,7 @@ internal fun TaskDetailContent(
 
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         IconRow(icon = null) {
-            MonoOutlinedTextField(
+            MonoTextField(
                 value = uiState.title,
                 onValueChange = updateTitle,
                 textStyle = MaterialTheme.typography.headlineSmall,
@@ -131,7 +135,7 @@ internal fun TaskDetailContent(
             )
         }
         IconRow(icon = Icons.Default.Sort) {
-            MonoOutlinedTextField(
+            MonoTextField(
                 value = uiState.description,
                 onValueChange = updateDescription,
                 textStyle = MaterialTheme.typography.bodyLarge,
@@ -146,24 +150,14 @@ internal fun TaskDetailContent(
             AnimatedContent(
                 targetState = formattedDate,
                 label = "create_date"
-            ) {
-                if (it != null) {
+            ) { date ->
+                date?.let {
                     MonoInputChip(
-                        label = {
-                            Text(
-                                text = if (formattedTime != null) {
-                                    "$it $formattedTime"
-                                } else {
-                                    "$it"
-                                }
-                            )
-                        },
+                        label = { Text(text = formattedTime?.let { time -> "$it $time" } ?: it) },
                         onClick = { showDateDialog = true },
                         onTrailingClick = { updateDateTime(null, null) }
                     )
-                } else {
-                    Text(text = stringResource(id = R.string.placeholder_date_time))
-                }
+                } ?: Text(text = stringResource(id = R.string.placeholder_date_time))
             }
         }
     }
@@ -174,6 +168,23 @@ internal fun TaskDetailContent(
             onConfirm = updateDateTime,
             previousDate = uiState.date,
             previousTime = uiState.time
+        )
+    }
+}
+
+@Preview(name = "Task detail screen")
+@Composable
+private fun TaskDetailScreenPreview() {
+    MonoTheme {
+        TaskDetailScreen(
+            uiState = TaskDetailUiState(),
+            onUpdateTask = { },
+            onDeleteTask = { },
+            updateTitle = { },
+            updateDescription = { },
+            updateDateTime = { _, _ -> },
+            updateCompleted = { },
+            toggleBookmark = { }
         )
     }
 }

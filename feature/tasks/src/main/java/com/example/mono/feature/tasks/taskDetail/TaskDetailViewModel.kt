@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mono.core.data.repository.TaskRepository
-import com.example.mono.feature.tasks.navigation.TASK_ID
+import com.example.mono.feature.tasks.navigation.TaskIdArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,7 +35,7 @@ class TaskDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val taskId: String = savedStateHandle[TASK_ID]!!
+    private val taskId = TaskIdArgs(savedStateHandle).taskId
 
     private val _uiState = MutableStateFlow(TaskDetailUiState())
     val uiState: StateFlow<TaskDetailUiState> = _uiState.asStateFlow()
@@ -61,6 +61,13 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    fun updateCompleted(completed: Boolean) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isCompleted = completed) }
+            updateTask()
+        }
+    }
+
     fun deleteTask() = viewModelScope.launch {
         taskRepository.deleteTask(taskId)
         _uiState.update {
@@ -78,6 +85,10 @@ class TaskDetailViewModel @Inject constructor(
 
     fun updateDateTime(newDate: LocalDate?, newTime: LocalTime?) {
         _uiState.update { it.copy(date = newDate, time = newTime) }
+    }
+
+    fun toggleBookmark(bookmarked: Boolean) {
+        _uiState.update { it.copy(isBookmarked = bookmarked) }
     }
 
     private fun loadTask(taskId: String) {

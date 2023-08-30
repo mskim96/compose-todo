@@ -16,6 +16,7 @@
         android:theme="@style/Theme.Mono"
         tools:targetApi="31">
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".MonoActivity"
             android:exported="true"
             android:theme="@style/Theme.Mono">

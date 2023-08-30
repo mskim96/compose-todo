@@ -35,7 +35,6 @@ interface TaskRepository {
      *
      * @param title title of the task.
      * @param description description of the task.
-     * @param isCompleted The completion status of the task.
      * @param isBookmarked The bookmarked status of the task.
      * @param date date of the task.
      * @param time time of the task.
@@ -45,7 +44,6 @@ interface TaskRepository {
     suspend fun createTask(
         title: String,
         description: String,
-        isCompleted: Boolean,
         isBookmarked: Boolean,
         date: LocalDate?,
         time: LocalTime?

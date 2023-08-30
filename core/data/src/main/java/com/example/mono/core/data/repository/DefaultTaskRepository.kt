@@ -37,7 +37,6 @@ class DefaultTaskRepository @Inject constructor(
     override suspend fun createTask(
         title: String,
         description: String,
-        isCompleted: Boolean,
         isBookmarked: Boolean,
         date: LocalDate?,
         time: LocalTime?
@@ -49,7 +48,7 @@ class DefaultTaskRepository @Inject constructor(
             id = taskId,
             title = title,
             description = description,
-            isCompleted = isCompleted,
+            isCompleted = false,
             isBookmarked = isBookmarked,
             date = date,
             time = time

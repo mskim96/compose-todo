@@ -1,10 +1,10 @@
-package com.example.mono.feature.tasks
+package com.example.mono.feature.tasks.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mono.core.data.repository.TaskRepository
 import com.example.mono.core.model.Task
-import com.example.mono.feature.tasks.navigation.DELETE_RESULT_OK
+import com.example.mono.feature.tasks.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 
@@ -48,6 +50,22 @@ class TasksViewModel @Inject constructor(
         }
     }
 
+    fun createNewTask(
+        title: String,
+        description: String,
+        isBookMarked: Boolean,
+        date: LocalDate?,
+        time: LocalTime?
+    ) = viewModelScope.launch {
+        taskRepository.createTask(
+            title = title,
+            description = description,
+            isBookmarked = isBookMarked,
+            date = date,
+            time = time
+        )
+    }
+
     fun completeTask(task: Task, completed: Boolean) = viewModelScope.launch {
         if (completed) {
             taskRepository.completeTask(task.id)
@@ -74,12 +92,6 @@ class TasksViewModel @Inject constructor(
 
     private fun showSnackBarMessage(message: Int) {
         _userMessage.value = message
-    }
-
-    fun showEditResultMessage(result: Int) {
-        when (result) {
-            DELETE_RESULT_OK -> showSnackBarMessage(R.string.successfully_deleted_task_message)
-        }
     }
 }
 
