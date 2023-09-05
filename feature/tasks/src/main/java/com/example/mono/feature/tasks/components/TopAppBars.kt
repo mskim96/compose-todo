@@ -4,37 +4,38 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import com.example.mono.core.designsystem.component.MonoLargeTopAppBar
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.feature.tasks.R
-import com.example.mono.core.designsystem.R as designSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksTopAppBar(
+    title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    openDrawer: () -> Unit,
     navigateToSearch: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
-    MonoTopAppBar(
-        title = {
-            Text(
-                text = stringResource(id = designSystemR.string.app_name),
-                fontWeight = FontWeight.ExtraBold
-            )
-        },
+    MonoLargeTopAppBar(
+        title = title,
         modifier = modifier,
+        navigationIcon = {
+            IconButton(onClick = openDrawer) {
+                Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+            }
+        },
         actions = {
             IconButton(onClick = navigateToSearch) {
                 Icon(
@@ -43,8 +44,7 @@ fun TasksTopAppBar(
                 )
             }
             IconButton(onClick = { }) {
-                // TODO: User profile or setting screen.
-                Icon(imageVector = Icons.Default.Settings, contentDescription = null)
+                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
             }
         },
         scrollBehavior = scrollBehavior
@@ -85,5 +85,24 @@ internal fun TaskDetailTopAppBar(
                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
             }
         }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddEditTaskGroupTopAppBar(
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior? = null
+) {
+    MonoTopAppBar(
+        titleRes = R.string.task_group_add_edit,
+        modifier = modifier,
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            }
+        },
+        scrollBehavior = scrollBehavior
     )
 }

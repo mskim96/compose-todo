@@ -21,4 +21,5 @@ data class Task(
     val isBookmarked: Boolean = false,
     val date: LocalDate? = null,
     val time: LocalTime? = null,
+    val groupId: String
 )

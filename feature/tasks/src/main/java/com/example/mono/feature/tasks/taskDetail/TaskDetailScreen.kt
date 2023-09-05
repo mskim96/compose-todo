@@ -138,7 +138,6 @@ internal fun TaskDetailContent(
             MonoTextField(
                 value = uiState.description,
                 onValueChange = updateDescription,
-                textStyle = MaterialTheme.typography.bodyLarge,
                 placeholder = { Text(text = stringResource(id = R.string.placeholder_description)) }
             )
         }

@@ -39,7 +39,8 @@ class DefaultTaskRepository @Inject constructor(
         description: String,
         isBookmarked: Boolean,
         date: LocalDate?,
-        time: LocalTime?
+        time: LocalTime?,
+        groupId: String
     ): String {
         val taskId = withContext(dispatcher) {
             UUID.randomUUID().toString()
@@ -51,7 +52,8 @@ class DefaultTaskRepository @Inject constructor(
             isCompleted = false,
             isBookmarked = isBookmarked,
             date = date,
-            time = time
+            time = time,
+            groupId = groupId
         )
         localDatasource.upsert(task.asEntity())
         return taskId

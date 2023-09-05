@@ -13,5 +13,6 @@ fun Task.asEntity() = TaskEntity(
     isCompleted = isCompleted,
     isBookmarked = isBookmarked,
     date = date,
-    time = time
+    time = time,
+    groupId = groupId
 )

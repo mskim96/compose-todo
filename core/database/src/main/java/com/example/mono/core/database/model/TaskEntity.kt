@@ -19,7 +19,8 @@ data class TaskEntity(
     val isCompleted: Boolean,
     val isBookmarked: Boolean,
     val date: LocalDate?,
-    val time: LocalTime?
+    val time: LocalTime?,
+    val groupId: String
 )
 
 /**
@@ -32,5 +33,6 @@ fun TaskEntity.asExternalModel() = Task(
     isCompleted = isCompleted,
     isBookmarked = isBookmarked,
     date = date,
-    time = time
+    time = time,
+    groupId = groupId
 )

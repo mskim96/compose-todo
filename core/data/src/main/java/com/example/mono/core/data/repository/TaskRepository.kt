@@ -46,7 +46,8 @@ interface TaskRepository {
         description: String,
         isBookmarked: Boolean,
         date: LocalDate?,
-        time: LocalTime?
+        time: LocalTime?,
+        groupId: String
     ): String
 
     /**

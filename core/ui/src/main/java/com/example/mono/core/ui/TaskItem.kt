@@ -90,7 +90,8 @@ private fun TaskFullItemPreview() {
                     isCompleted = true,
                     isBookmarked = true,
                     date = LocalDate.of(2023, 8, 24),
-                    time = LocalTime.of(16, 42)
+                    time = LocalTime.of(16, 42),
+                    groupId = ""
                 ),
                 toggleBookmark = { },
                 onCheckedChange = { },

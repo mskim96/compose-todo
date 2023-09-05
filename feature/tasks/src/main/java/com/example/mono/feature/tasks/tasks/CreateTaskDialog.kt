@@ -52,8 +52,9 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CreateTaskDialog(
+    taskGroupId: String,
     onDismiss: () -> Unit,
-    onCreateTask: (title: String, description: String, isBookmarked: Boolean, date: LocalDate?, time: LocalTime?) -> Unit,
+    onCreateTask: (title: String, description: String, isBookmarked: Boolean, date: LocalDate?, time: LocalTime?, groupId: String) -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 ) {
@@ -133,7 +134,7 @@ fun CreateTaskDialog(
             showDescription = { showDescription = true },
             showDateDialog = { showDateDialog = true },
             toggleBookmark = { bookmark = it },
-            onCreateTask = { onCreateTask(title, description, bookmark, date, time) },
+            onCreateTask = { onCreateTask(title, description, bookmark, date, time, taskGroupId) },
             validateCreateTask = { title.isNotEmpty() || description.isNotEmpty() }
         )
 
@@ -202,8 +203,9 @@ private fun CreateTaskDialogButtonRow(
 private fun CreateTaskDialogPreview() {
     MonoTheme {
         CreateTaskDialog(
+            taskGroupId = "",
             onDismiss = {},
-            onCreateTask = { _, _, _, _, _ -> },
+            onCreateTask = { _, _, _, _, _, _-> },
             sheetState = rememberStandardBottomSheetState(
                 initialValue = SheetValue.Expanded
             )
