@@ -4,7 +4,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import com.example.mono.core.model.Task
 
-fun LazyListScope.taskList(
+fun LazyListScope.tasks(
     items: List<Task>,
     onCheckedChange: (Task, Boolean) -> Unit,
     onTaskClick: (Task) -> Unit,

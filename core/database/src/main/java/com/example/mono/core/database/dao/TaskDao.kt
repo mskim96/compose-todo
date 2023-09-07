@@ -7,20 +7,10 @@ import com.example.mono.core.database.model.TaskEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Data Access Object for the task table.
- *
- * TODO: Create method for filtered tasks flow. eg) get only bookmarked, ...
+ * Dao for [TaskEntity] access.
  */
 @Dao
 interface TaskDao {
-
-    /**
-     * Observe list of tasks.
-     *
-     * @return the task with taskId.
-     */
-    @Query("SELECT * FROM task")
-    fun observeAll(): Flow<List<TaskEntity>>
 
     /**
      * Observe a single task.
@@ -28,8 +18,21 @@ interface TaskDao {
      * @param taskId the task id.
      * @return the task with taskId.
      */
-    @Query("SELECT * FROM task WHERE id = :taskId")
-    fun observeById(taskId: String): Flow<TaskEntity>
+    @Query(
+        value = """
+            SELECT * FROM tasks 
+            WHERE id = :taskId
+        """
+    )
+    fun getTaskEntity(taskId: String): Flow<TaskEntity>
+
+    /**
+     * Observe list of tasks.
+     *
+     * @return All task entities.
+     */
+    @Query(value = "SELECT * FROM tasks")
+    fun getTaskEntities(): Flow<List<TaskEntity>>
 
     /**
      * Select a task by id.
@@ -37,8 +40,13 @@ interface TaskDao {
      * @param taskId the task id.
      * @return the task with taskId.
      */
-    @Query("SELECT * FROM task WHERE id = :taskId")
-    suspend fun getById(taskId: String): TaskEntity?
+    @Query(
+        value = """
+            SELECT * FROM tasks 
+            WHERE id = :taskId
+        """
+    )
+    suspend fun getOnOffTaskEntity(taskId: String): TaskEntity?
 
     /**
      * Insert of update a task in the database. If a task already exists, replace it.
@@ -46,33 +54,56 @@ interface TaskDao {
      * @param task the task to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(task: TaskEntity)
+    suspend fun upsertTask(task: TaskEntity)
+
 
     /**
      * Update the complete status of a task.
+     *
+     * @param taskId the task id.
+     * @param isCompleted change the task's state from completed to active, or vice versa.
      */
-    @Query("UPDATE task SET isCompleted = :completed WHERE id = :taskId")
-    suspend fun updateCompleted(taskId: String, completed: Boolean)
+    @Query(
+        value = """
+            UPDATE tasks SET isCompleted = :isCompleted
+            WHERE id = :taskId
+        """
+    )
+    suspend fun updateCompleted(taskId: String, isCompleted: Boolean)
 
     /**
      * Update the bookmark status of a task.
+     *
+     * @param taskId the task id.
+     * @param isBookmarked
      */
-    @Query("UPDATE task SET isBookmarked = :bookmarked WHERE id = :taskId")
-    suspend fun updateBookmarked(taskId: String, bookmarked: Boolean)
+    @Query(
+        value = """
+            UPDATE tasks SET isBookmarked = :isBookmarked
+            WHERE id = :taskId
+        """
+    )
+    suspend fun updateBookmarked(taskId: String, isBookmarked: Boolean)
 
     /**
      * Delete a task by id.
      *
+     * @param taskId the task id.
      * @return the number of tasks deleted. This should always be 1.
      */
-    @Query("DELETE FROM task WHERE id = :taskId")
-    suspend fun deleteById(taskId: String): Int
+    @Query(
+        value = """
+            DELETE FROM tasks 
+            WHERE id = :taskId
+        """
+    )
+    suspend fun deleteTask(taskId: String): Int
 
     /**
      * Delete all completed tasks from the table.
      *
      * @return the number of the tasks delete.
      */
-    @Query("DELETE FROM task WHERE isCompleted = 1")
+    @Query(value = "DELETE FROM tasks WHERE isCompleted = 1")
     suspend fun deleteCompleted(): Int
 }

@@ -11,16 +11,10 @@ import com.example.mono.core.model.Task
 import com.example.mono.feature.tasks.tasks.TasksRoute
 
 /**
- * Task group filter argument.
- */
-const val TASKS_GROUP_ID_ARGS = "taskGroupId"
-
-/**
  * Tasks graph and route.
  */
 const val TASKS_GRAPH_ROUTE_PATTERN = "tasks_graph"
-private const val TASKS_DESTINATION = "tasks_route"
-private const val TASKS_ROUTE = "tasks_route/{$TASKS_GROUP_ID_ARGS}"
+const val TASKS_ROUTE = "tasks_route"
 
 /**
  * The entry point to the Task feature module's graph.
@@ -29,8 +23,8 @@ fun NavController.navigateToTasksGraph(navOptions: NavOptions? = null) {
     this.navigate(TASKS_GRAPH_ROUTE_PATTERN, navOptions)
 }
 
-fun NavController.navigateToTasks(groupId: String) {
-    this.navigate("$TASKS_DESTINATION/$groupId") {
+fun NavController.navigateToTasks() {
+    this.navigate(TASKS_ROUTE) {
         popUpTo(TASKS_GRAPH_ROUTE_PATTERN)
     }
 }
@@ -38,13 +32,14 @@ fun NavController.navigateToTasks(groupId: String) {
 /**
  * Task feature module's graph.
  *
- * @param navigateToTaskGroup
  * @param onTaskClick event when a task is clicked.
  * @param nestedGraphs The nested graphs of Task.
  */
 fun NavGraphBuilder.tasksGraph(
-    navigateToTaskGroup: (groupId: String) -> Unit,
-    navigateToAddEditTaskGroup: () -> Unit,
+    currentRoute: String,
+    navigateToBookmarkTasks: () -> Unit,
+    navigateToAddEditTaskList: () -> Unit,
+    navigateToTaskList: (taskListId: String) -> Unit,
     onTaskClick: (Task) -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit
 ) {
@@ -53,14 +48,13 @@ fun NavGraphBuilder.tasksGraph(
         startDestination = TASKS_ROUTE
     ) {
         composable(
-            route = TASKS_ROUTE,
-            arguments = listOf(
-                navArgument(TASKS_GROUP_ID_ARGS) { type = NavType.StringType }
-            )
+            route = TASKS_ROUTE
         ) {
             TasksRoute(
-                navigateToTaskGroup = navigateToTaskGroup,
-                navigateToAddEditTaskGroup = navigateToAddEditTaskGroup,
+                currentRoute = currentRoute,
+                navigateToBookmarkTasks = navigateToBookmarkTasks,
+                navigateToAddEditTaskList = navigateToAddEditTaskList,
+                navigateToTaskList = navigateToTaskList,
                 onTaskClick = onTaskClick
             )
         }

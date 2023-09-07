@@ -38,6 +38,7 @@ interface TaskRepository {
      * @param isBookmarked The bookmarked status of the task.
      * @param date date of the task.
      * @param time time of the task.
+     * @param taskListId taskListId of the task.
      *
      * @return the task of id.
      */
@@ -47,7 +48,7 @@ interface TaskRepository {
         isBookmarked: Boolean,
         date: LocalDate?,
         time: LocalTime?,
-        groupId: String
+        taskListId: String?
     ): String
 
     /**

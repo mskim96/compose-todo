@@ -8,11 +8,11 @@ import com.example.mono.core.model.Task
  */
 fun Task.asEntity() = TaskEntity(
     id = id,
+    taskListId = taskListId,
     title = title,
     description = description,
-    isCompleted = isCompleted,
-    isBookmarked = isBookmarked,
     date = date,
     time = time,
-    groupId = groupId
+    isCompleted = isCompleted,
+    isBookmarked = isBookmarked
 )

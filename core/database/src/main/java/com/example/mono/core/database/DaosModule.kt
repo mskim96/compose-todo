@@ -1,7 +1,7 @@
 package com.example.mono.core.database
 
 import com.example.mono.core.database.dao.TaskDao
-import com.example.mono.core.database.dao.TaskGroupDao
+import com.example.mono.core.database.dao.TaskListDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +19,5 @@ object DaosModule {
     @Provides
     fun providesTaskGroupDao(
         database: MonoDatabase
-    ): TaskGroupDao = database.taskGroupDao()
+    ): TaskListDao = database.taskGroupDao()
 }

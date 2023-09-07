@@ -26,7 +26,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
-internal fun TaskItem(
+fun TaskItem(
     task: Task,
     onCheckedChange: (Boolean) -> Unit,
     onTaskClick: (Task) -> Unit,
@@ -91,7 +91,7 @@ private fun TaskFullItemPreview() {
                     isBookmarked = true,
                     date = LocalDate.of(2023, 8, 24),
                     time = LocalTime.of(16, 42),
-                    groupId = ""
+                    taskListId = ""
                 ),
                 toggleBookmark = { },
                 onCheckedChange = { },

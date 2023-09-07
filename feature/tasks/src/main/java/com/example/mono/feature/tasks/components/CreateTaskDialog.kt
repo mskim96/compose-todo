@@ -1,4 +1,4 @@
-package com.example.mono.feature.tasks.tasks
+package com.example.mono.feature.tasks.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -45,16 +45,14 @@ import com.example.mono.core.common.datetime.toFormattedTime
 import com.example.mono.core.designsystem.component.MonoInputChip
 import com.example.mono.core.designsystem.component.MonoTextField
 import com.example.mono.core.designsystem.theme.MonoTheme
-import com.example.mono.feature.tasks.components.MonoDateTimePicker
 import java.time.LocalDate
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CreateTaskDialog(
-    taskGroupId: String,
     onDismiss: () -> Unit,
-    onCreateTask: (title: String, description: String, isBookmarked: Boolean, date: LocalDate?, time: LocalTime?, groupId: String) -> Unit,
+    onCreateTask: (title: String, description: String, isBookmarked: Boolean, date: LocalDate?, time: LocalTime?) -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 ) {
@@ -134,7 +132,7 @@ fun CreateTaskDialog(
             showDescription = { showDescription = true },
             showDateDialog = { showDateDialog = true },
             toggleBookmark = { bookmark = it },
-            onCreateTask = { onCreateTask(title, description, bookmark, date, time, taskGroupId) },
+            onCreateTask = { onCreateTask(title, description, bookmark, date, time) },
             validateCreateTask = { title.isNotEmpty() || description.isNotEmpty() }
         )
 
@@ -203,9 +201,8 @@ private fun CreateTaskDialogButtonRow(
 private fun CreateTaskDialogPreview() {
     MonoTheme {
         CreateTaskDialog(
-            taskGroupId = "",
             onDismiss = {},
-            onCreateTask = { _, _, _, _, _, _-> },
+            onCreateTask = { _, _, _, _, _-> },
             sheetState = rememberStandardBottomSheetState(
                 initialValue = SheetValue.Expanded
             )

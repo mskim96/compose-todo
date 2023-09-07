@@ -1,6 +1,7 @@
 package com.example.mono.core.designsystem.component
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 /**
  * Mono drawer sheet with content slots Wraps Material 3 [ModalDrawerSheet].
@@ -24,7 +26,7 @@ fun MonoModalSheet(
     content: @Composable ColumnScope.() -> Unit
 ) {
     ModalDrawerSheet(
-        modifier = modifier,
+        modifier = modifier.widthIn(max = 320.dp),
         content = content,
         drawerContainerColor = MonoDrawerDefaults.drawerContainerColor(),
         drawerContentColor = MonoDrawerDefaults.drawerContentColor()

@@ -1,4 +1,4 @@
-package com.example.mono.feature.tasks.editGroup
+package com.example.mono.feature.tasks.addEditTaskList
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -21,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -37,19 +39,21 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mono.core.designsystem.component.MonoTextField
-import com.example.mono.core.model.TaskGroup
+import com.example.mono.core.designsystem.theme.MonoTheme
+import com.example.mono.core.model.TaskList
 import com.example.mono.feature.tasks.R
 import com.example.mono.feature.tasks.components.AddEditTaskGroupTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditTaskGroupRoute(
+fun AddEditTaskListRoute(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: AddEditTaskGroupViewModel = hiltViewModel()
+    viewModel: AddEditTaskListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -62,7 +66,7 @@ fun AddEditTaskGroupRoute(
             )
         }
     ) { padding ->
-        AddEditTaskGroupScreen(
+        AddEditTaskListScreen(
             uiState = uiState,
             onCreateNewTaskGroup = viewModel::createTaskGroup,
             onUpdateTaskGroup = viewModel::updateTaskGroup,
@@ -76,11 +80,11 @@ fun AddEditTaskGroupRoute(
 }
 
 @Composable
-fun AddEditTaskGroupScreen(
-    uiState: AddEditTaskGroupUiState,
+fun AddEditTaskListScreen(
+    uiState: AddEditTaskListUiState,
     onCreateNewTaskGroup: (name: String) -> Unit,
-    onUpdateTaskGroup: (TaskGroup) -> Unit,
-    onDeleteTaskGroup: (TaskGroup) -> Unit,
+    onUpdateTaskGroup: (TaskList) -> Unit,
+    onDeleteTaskGroup: (TaskList) -> Unit,
     modifier: Modifier = Modifier,
     scrollConnection: NestedScrollConnection
 ) {
@@ -93,7 +97,8 @@ fun AddEditTaskGroupScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(scrollConnection)
+            .nestedScroll(scrollConnection),
+        state = rememberLazyListState()
     ) {
         item {
             MonoTextField(
@@ -148,9 +153,12 @@ fun AddEditTaskGroupScreen(
                 }
             )
         }
-        items(uiState.items) {
-            AddEditTaskGroupItem(
-                taskGroup = it,
+        items(
+            uiState.items,
+            key = { it.id }
+        ) {
+            AddEditTaskListItem(
+                taskList = it,
                 onUpdateTaskGroup = onUpdateTaskGroup,
                 onDeleteTaskGroup = onDeleteTaskGroup
             )
@@ -159,17 +167,17 @@ fun AddEditTaskGroupScreen(
 }
 
 @Composable
-fun AddEditTaskGroupItem(
-    taskGroup: TaskGroup,
-    onUpdateTaskGroup: (TaskGroup) -> Unit,
-    onDeleteTaskGroup: (TaskGroup) -> Unit,
+fun AddEditTaskListItem(
+    taskList: TaskList,
+    onUpdateTaskGroup: (TaskList) -> Unit,
+    onDeleteTaskGroup: (TaskList) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     var taskName by rememberSaveable {
-        mutableStateOf(taskGroup.name)
+        mutableStateOf(taskList.name)
     }
     var isFocused by remember { mutableStateOf(false) }
 
@@ -182,10 +190,15 @@ fun AddEditTaskGroupItem(
             .focusRequester(focusRequester)
             .onFocusChanged {
                 isFocused = it.isFocused
-                if (taskName != taskGroup.name) onUpdateTaskGroup(taskGroup.copy(name = taskName))
+                if (taskName != taskList.name) onUpdateTaskGroup(taskList.copy(name = taskName))
             },
         leadingIcon = {
-            IconButton(onClick = { if (isFocused) onDeleteTaskGroup(taskGroup) }) {
+            IconButton(onClick = {
+                if (isFocused){
+                    onDeleteTaskGroup(taskList)
+                    focusManager.clearFocus()
+                }
+            }) {
                 Crossfade(targetState = isFocused, label = "delete_task_group") {
                     if (it) {
                         Icon(imageVector = Icons.Outlined.FolderDelete, contentDescription = null)
@@ -198,7 +211,7 @@ fun AddEditTaskGroupItem(
         trailingIcon = {
             IconButton(onClick = {
                 if (isFocused) {
-                    onUpdateTaskGroup(taskGroup.copy(name = taskName))
+                    onUpdateTaskGroup(taskList.copy(name = taskName))
                     focusManager.clearFocus()
                 } else {
                     focusRequester.requestFocus()
@@ -214,4 +227,24 @@ fun AddEditTaskGroupItem(
             }
         }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun AddEditTaskListScreenPreview() {
+    MonoTheme {
+        Surface {
+            AddEditTaskListScreen(
+                uiState = AddEditTaskListUiState(
+                    listOf(TaskList("1", "Preview 1"))
+                ),
+                onCreateNewTaskGroup = {},
+                onUpdateTaskGroup = {},
+                onDeleteTaskGroup = {},
+                scrollConnection = TopAppBarDefaults
+                    .exitUntilCollapsedScrollBehavior().nestedScrollConnection
+            )
+        }
+    }
 }

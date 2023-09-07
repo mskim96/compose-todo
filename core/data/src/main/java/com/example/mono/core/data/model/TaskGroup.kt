@@ -1,9 +1,12 @@
 package com.example.mono.core.data.model
 
-import com.example.mono.core.database.model.TaskGroupEntity
-import com.example.mono.core.model.TaskGroup
+import com.example.mono.core.database.model.TaskListEntity
+import com.example.mono.core.model.TaskList
 
-fun TaskGroup.asEntity() = TaskGroupEntity(
+/**
+ * Converting the [TaskList] external model to a [TaskListEntity].
+ */
+fun TaskList.asEntity() = TaskListEntity(
     id = id,
     name = name
 )

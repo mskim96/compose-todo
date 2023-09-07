@@ -21,7 +21,7 @@ class DefaultTaskRepository @Inject constructor(
     @Dispatcher(Default) private val dispatcher: CoroutineDispatcher
 ) : TaskRepository {
 
-    override fun getTasksStream(): Flow<List<Task>> = localDatasource.observeAll()
+    override fun getTasksStream(): Flow<List<Task>> = localDatasource.getTaskEntities()
         .map { tasks ->
             withContext(dispatcher) {
                 tasks.map(TaskEntity::asExternalModel)
@@ -29,10 +29,10 @@ class DefaultTaskRepository @Inject constructor(
         }
 
     override fun getTaskStream(taskId: String): Flow<Task> =
-        localDatasource.observeById(taskId).map(TaskEntity::asExternalModel)
+        localDatasource.getTaskEntity(taskId).map(TaskEntity::asExternalModel)
 
     override suspend fun getTask(taskId: String): Task? =
-        localDatasource.getById(taskId)?.asExternalModel()
+        localDatasource.getOnOffTaskEntity(taskId)?.asExternalModel()
 
     override suspend fun createTask(
         title: String,
@@ -40,7 +40,7 @@ class DefaultTaskRepository @Inject constructor(
         isBookmarked: Boolean,
         date: LocalDate?,
         time: LocalTime?,
-        groupId: String
+        taskListId: String?
     ): String {
         val taskId = withContext(dispatcher) {
             UUID.randomUUID().toString()
@@ -49,13 +49,13 @@ class DefaultTaskRepository @Inject constructor(
             id = taskId,
             title = title,
             description = description,
-            isCompleted = false,
-            isBookmarked = isBookmarked,
             date = date,
             time = time,
-            groupId = groupId
+            isCompleted = false,
+            isBookmarked = isBookmarked,
+            taskListId = taskListId
         )
-        localDatasource.upsert(task.asEntity())
+        localDatasource.upsertTask(task.asEntity())
         return taskId
     }
 
@@ -77,23 +77,23 @@ class DefaultTaskRepository @Inject constructor(
             time = time
         ) ?: throw Exception("Task (id $taskId) not found.")
 
-        localDatasource.upsert(task.asEntity())
+        localDatasource.upsertTask(task.asEntity())
     }
 
     override suspend fun completeTask(taskId: String) {
-        localDatasource.updateCompleted(taskId = taskId, completed = true)
+        localDatasource.updateCompleted(taskId = taskId, isCompleted = true)
     }
 
     override suspend fun activeTask(taskId: String) {
-        localDatasource.updateCompleted(taskId = taskId, completed = false)
+        localDatasource.updateCompleted(taskId = taskId, isCompleted = false)
     }
 
     override suspend fun addTaskBookmark(taskId: String) {
-        localDatasource.updateBookmarked(taskId = taskId, bookmarked = true)
+        localDatasource.updateBookmarked(taskId = taskId, isBookmarked = true)
     }
 
     override suspend fun removeTaskBookmark(taskId: String) {
-        localDatasource.updateBookmarked(taskId = taskId, bookmarked = false)
+        localDatasource.updateBookmarked(taskId = taskId, isBookmarked = false)
     }
 
     override suspend fun clearCompletedTask() {
@@ -101,6 +101,6 @@ class DefaultTaskRepository @Inject constructor(
     }
 
     override suspend fun deleteTask(taskId: String) {
-        localDatasource.deleteById(taskId)
+        localDatasource.deleteTask(taskId)
     }
 }

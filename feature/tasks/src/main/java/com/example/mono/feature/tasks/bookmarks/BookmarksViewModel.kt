@@ -1,4 +1,4 @@
-package com.example.mono.feature.tasks.tasks
+package com.example.mono.feature.tasks.bookmarks
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,9 +9,8 @@ import com.example.mono.core.data.repository.TaskListRepository
 import com.example.mono.core.data.repository.TaskRepository
 import com.example.mono.core.model.Task
 import com.example.mono.core.model.TaskFilterType
-import com.example.mono.core.model.TaskFilterType.ACTIVE_TASKS
-import com.example.mono.core.model.TaskFilterType.ALL_TASKS
-import com.example.mono.core.model.TaskList
+import com.example.mono.feature.tasks.tasks.TASKS_FILTER_SAVED_STATE_KEY
+import com.example.mono.feature.tasks.tasks.TasksUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,21 +22,15 @@ import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
-data class TasksUiState(
-    val tasks: List<Task> = emptyList(),
-    val taskLists: List<TaskList> = emptyList(),
-    val isLoading: Boolean = false
-)
-
 @HiltViewModel
-class TasksViewModel @Inject constructor(
+class BookmarksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     taskListRepository: TaskListRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _savedFilterType =
-        savedStateHandle.getStateFlow(TASKS_FILTER_SAVED_STATE_KEY, ALL_TASKS)
+        savedStateHandle.getStateFlow(TASKS_FILTER_SAVED_STATE_KEY, TaskFilterType.ALL_TASKS)
 
     private val _isLoading = MutableStateFlow(false)
     private val _taskLists = taskListRepository.getTaskLists()
@@ -114,19 +107,13 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    fun clearCompletedTasks() {
-        viewModelScope.launch {
-            taskRepository.clearCompletedTask()
-        }
-    }
-
     private fun filterTask(tasks: List<Task>, filteringType: TaskFilterType): List<Task> {
         val tasksToShow = ArrayList<Task>()
         // We filter the tasks based on the requestType
         for (task in tasks) {
             when (filteringType) {
-                ALL_TASKS -> tasksToShow.add(task)
-                ACTIVE_TASKS -> if (!task.isCompleted) {
+                TaskFilterType.ALL_TASKS -> if (task.isBookmarked) tasksToShow.add(task)
+                TaskFilterType.ACTIVE_TASKS -> if (task.isBookmarked && !task.isCompleted) {
                     tasksToShow.add(task)
                 }
             }
@@ -134,6 +121,3 @@ class TasksViewModel @Inject constructor(
         return tasksToShow
     }
 }
-
-// Used to save the current filtering in SavedStateHandle.
-const val TASKS_FILTER_SAVED_STATE_KEY = "TASKS_FILTER_SAVED_STATE_KEY"
