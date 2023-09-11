@@ -26,6 +26,7 @@ fun NavController.navigateToTaskList(taskListId: String) {
 
 fun NavGraphBuilder.taskList(
     navigateToTasks: () -> Unit,
+    navigateToBookmarkTasks: () -> Unit,
     navigateToAddEditTaskList: () -> Unit,
     navigateToTaskList: (taskListId: String) -> Unit,
     onTaskClick: (Task) -> Unit
@@ -38,6 +39,7 @@ fun NavGraphBuilder.taskList(
     ) {
         TaskListRoute(
             navigateToTasks = navigateToTasks,
+            navigateToBookmarkTasks = navigateToBookmarkTasks,
             navigateToAddEditTaskList = navigateToAddEditTaskList,
             navigateToTaskList = navigateToTaskList,
             onTaskClick = onTaskClick

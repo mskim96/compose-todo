@@ -26,5 +26,4 @@ include(":core:model")
 include(":core:network")
 include(":core:ui")
 
-include(":feature:calendar")
 include(":feature:tasks")

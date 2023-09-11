@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TaskListRoute(
     navigateToTasks: () -> Unit,
+    navigateToBookmarkTasks: () -> Unit,
     navigateToAddEditTaskList: () -> Unit,
     navigateToTaskList: (taskListId: String) -> Unit,
     onTaskClick: (Task) -> Unit,
@@ -75,7 +76,7 @@ fun TaskListRoute(
                 currentRoute = selectedTaskList.id,
                 taskLists = uiState.taskLists,
                 navigateToTasks = navigateToTasks,
-                navigateToBookmarks = {},
+                navigateToBookmarks = navigateToBookmarkTasks,
                 navigateToAddEditTaskList = navigateToAddEditTaskList,
                 navigateToTaskList = navigateToTaskList,
                 onDrawerClicked = { scope.launch { drawerState.close() } }

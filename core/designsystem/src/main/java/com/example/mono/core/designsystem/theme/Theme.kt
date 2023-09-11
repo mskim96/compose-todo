@@ -12,16 +12,36 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val darkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val monoDarkColorScheme = darkColorScheme(
+    background = Tan20,
+    onBackground = Tan89,
+    surface = Tan10,
+    onSurface = Tan89,
+    surfaceVariant = Orange60,
+    onSurfaceVariant = Tan89,
+    primary = Orange95,
+    onPrimary = White,
+    primaryContainer = Orange95,
+    onPrimaryContainer = Orange40,
+    secondaryContainer = Tan30,
+    onSecondaryContainer = Tan89,
+    outline = Tan70
 )
 
-private val lightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val monoLightColorScheme = lightColorScheme(
+    background = White,
+    onBackground = Tan29,
+    surface = White,
+    onSurface = Tan50,
+    surfaceVariant = Tan95,
+    onSurfaceVariant = Tan50,
+    primary = Orange70,
+    onPrimary = White,
+    primaryContainer = Orange99,
+    onPrimaryContainer = Tan50,
+    secondaryContainer = Tan90,
+    onSecondaryContainer = Tan50,
+    outline = Tan65
 )
 
 @Composable
@@ -30,8 +50,8 @@ fun MonoTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        darkTheme -> darkColorScheme
-        else -> lightColorScheme
+        darkTheme -> monoDarkColorScheme
+        else -> monoLightColorScheme
     }
 
     val view = LocalView.current
@@ -55,7 +75,7 @@ fun MonoTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = MonoTypography,
         content = content
     )
 }

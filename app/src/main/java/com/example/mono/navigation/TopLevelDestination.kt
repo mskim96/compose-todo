@@ -1,12 +1,12 @@
 package com.example.mono.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Checklist
-import androidx.compose.material.icons.filled.CollectionsBookmark
-import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.filled.StickyNote2
+import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Checklist
-import androidx.compose.material.icons.outlined.CollectionsBookmark
-import androidx.compose.material.icons.outlined.Today
+import androidx.compose.material.icons.outlined.StickyNote2
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -24,11 +24,11 @@ enum class TopLevelDestination(
         unSelectedIcon = Icons.Outlined.Checklist
     ),
     CALENDAR(
-        selectedIcon = Icons.Default.Today,
-        unSelectedIcon = Icons.Outlined.Today
+        selectedIcon = Icons.Default.CalendarToday,
+        unSelectedIcon = Icons.Outlined.CalendarToday
     ),
-    DIARY(
-        selectedIcon = Icons.Default.CollectionsBookmark,
-        unSelectedIcon = Icons.Outlined.CollectionsBookmark
+    NOTES(
+        selectedIcon = Icons.Default.StickyNote2,
+        unSelectedIcon = Icons.Outlined.StickyNote2
     )
 }

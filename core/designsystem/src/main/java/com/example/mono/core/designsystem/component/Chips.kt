@@ -1,7 +1,6 @@
 package com.example.mono.core.designsystem.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,7 +52,7 @@ fun MonoInputChip(
         } else {
             null
         },
-        shape = CircleShape,
+        shape = MaterialTheme.shapes.extraSmall,
         colors = InputChipDefaults.inputChipColors()
     )
 }

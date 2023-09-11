@@ -11,11 +11,11 @@ import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.mono.core.designsystem.component.MonoLargeTopAppBar
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.feature.tasks.R
 
@@ -28,7 +28,7 @@ fun TasksTopAppBar(
     navigateToSearch: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
-    MonoLargeTopAppBar(
+    MonoTopAppBar(
         title = title,
         modifier = modifier,
         navigationIcon = {
@@ -44,7 +44,10 @@ fun TasksTopAppBar(
                 )
             }
             IconButton(onClick = { }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = null
+                )
             }
         },
         scrollBehavior = scrollBehavior
@@ -67,7 +70,7 @@ internal fun TaskDetailTopAppBar(
     }
 
     MonoTopAppBar(
-        title = "",
+        title = { Text(text = "") },
         modifier = modifier,
         navigationIcon = {
             IconButton(onClick = onBackClick) {

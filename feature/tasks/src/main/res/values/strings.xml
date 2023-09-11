@@ -17,4 +17,9 @@
     <string name="completed_tasks_cleared">Completed tasks cleared.</string>
     <string name="task_set_bookmarked">The task has been bookmarked.</string>
     <string name="task_undo_bookmarked">Removed bookmark from the task.</string>
+
+    <!--    Empty content   -->
+    <string name="no_tasks">Add your to-dos appear here</string>
+    <string name="no_tasks_bookmark">No tasks with bookmark yet</string>
+    <string name="no_tasks_reminder">To-dos with upcoming reminders appear here</string>
 </resources>

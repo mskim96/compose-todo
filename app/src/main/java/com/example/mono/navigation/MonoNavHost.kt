@@ -46,6 +46,7 @@ fun MonoNavHost(
                 )
                 taskList(
                     navigateToTasks = navController::navigateToTasks,
+                    navigateToBookmarkTasks = navController::navigateToBookmarkTasks,
                     navigateToAddEditTaskList = navController::navigateToAddEditTaskList,
                     navigateToTaskList = { taskListId -> navController.navigateToTaskList(taskListId) },
                     onTaskClick = { task -> navController.navigateToTaskDetail(task.id) }

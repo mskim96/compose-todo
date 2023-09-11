@@ -12,7 +12,7 @@ import androidx.navigation.navOptions
 import com.example.mono.feature.tasks.navigation.navigateToTasksGraph
 import com.example.mono.navigation.TopLevelDestination
 import com.example.mono.navigation.TopLevelDestination.CALENDAR
-import com.example.mono.navigation.TopLevelDestination.DIARY
+import com.example.mono.navigation.TopLevelDestination.NOTES
 import com.example.mono.navigation.TopLevelDestination.TASKS
 
 @Composable
@@ -47,7 +47,7 @@ class MonoAppState(
         when (topLevelDestination) {
             TASKS -> navController.navigateToTasksGraph(topLevelNavOptions)
             CALENDAR -> Unit
-            DIARY -> Unit
+            NOTES -> Unit
         }
     }
 }
