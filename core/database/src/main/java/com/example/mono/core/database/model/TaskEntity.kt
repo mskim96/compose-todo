@@ -24,7 +24,7 @@ import java.time.LocalTime
 data class TaskEntity(
     @PrimaryKey val id: String,
     val title: String,
-    val description: String,
+    val detail: String,
     val date: LocalDate?,
     val time: LocalTime?,
     val isCompleted: Boolean,
@@ -35,7 +35,7 @@ data class TaskEntity(
 fun TaskEntity.asExternalModel() = Task(
     id = id,
     title = title,
-    description = description,
+    detail = detail,
     date = date,
     time = time,
     isCompleted = isCompleted,

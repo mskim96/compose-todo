@@ -83,7 +83,7 @@ class BookmarksViewModel @Inject constructor(
     ) = viewModelScope.launch {
         taskRepository.createTask(
             title = title,
-            description = description,
+            detail = description,
             isBookmarked = isBookMarked,
             date = date,
             time = time,
@@ -92,19 +92,11 @@ class BookmarksViewModel @Inject constructor(
     }
 
     fun completeTask(task: Task, completed: Boolean) = viewModelScope.launch {
-        if (completed) {
-            taskRepository.completeTask(task.id)
-        } else {
-            taskRepository.activeTask(task.id)
-        }
+        taskRepository.updateTaskBookmark(task.id, completed)
     }
 
     fun updateBookmarked(task: Task, bookmarked: Boolean) = viewModelScope.launch {
-        if (bookmarked) {
-            taskRepository.addTaskBookmark(task.id)
-        } else {
-            taskRepository.removeTaskBookmark(task.id)
-        }
+        taskRepository.updateTaskBookmark(task.id, bookmarked)
     }
 
     private fun filterTask(tasks: List<Task>, filteringType: TaskFilterType): List<Task> {

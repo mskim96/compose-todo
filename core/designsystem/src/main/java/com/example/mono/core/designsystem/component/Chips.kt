@@ -20,17 +20,17 @@ import com.example.mono.core.designsystem.theme.MonoTheme
  * Mono Input chip with included trailing icon and text content slot.
  *
  * @param onClick Called when the user clicks the chip.
- * @param modifier Modifier to be applied to the chip.
- * @param onTrailingClick Called when the user clicks the chip's trailing icon.
  * @param label The text label content.
+ * @param modifier Modifier to be applied to the chip.
+ * @param onTrailingIconClick Called when the user clicks the chip's trailing icon.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonoInputChip(
     onClick: () -> Unit,
+    label: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    onTrailingClick: (() -> Unit)? = null,
-    label: @Composable () -> Unit
+    onTrailingIconClick: (() -> Unit)? = null,
 ) {
     InputChip(
         selected = false,
@@ -41,12 +41,12 @@ fun MonoInputChip(
             }
         },
         modifier = modifier,
-        trailingIcon = if (onTrailingClick != null) {
+        trailingIcon = if (onTrailingIconClick != null) {
             {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = null,
-                    modifier = Modifier.clickable(onClick = onTrailingClick)
+                    modifier = Modifier.clickable(onClick = onTrailingIconClick)
                 )
             }
         } else {
@@ -64,7 +64,7 @@ private fun MonoInputChipPreview() {
         Surface {
             MonoInputChip(
                 onClick = { },
-                onTrailingClick = { },
+                onTrailingIconClick = { },
                 label = { Text(text = "Input chip preview") }
             )
         }

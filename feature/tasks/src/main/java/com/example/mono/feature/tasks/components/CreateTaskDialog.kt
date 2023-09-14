@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -55,7 +54,7 @@ fun CreateTaskDialog(
     onDismiss: () -> Unit,
     onCreateTask: (title: String, description: String, isBookmarked: Boolean, date: LocalDate?, time: LocalTime?) -> Unit,
     modifier: Modifier = Modifier,
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 ) {
     val (titleRef, descriptionRef) = remember { FocusRequester.createRefs() }
 
@@ -121,7 +120,7 @@ fun CreateTaskDialog(
                 MonoInputChip(
                     label = { Text(text = formattedTime?.let { time -> "$it $time" } ?: it) },
                     onClick = { showDateDialog = true },
-                    onTrailingClick = { date = null; time = null },
+                    onTrailingIconClick = { date = null; time = null },
                     modifier = Modifier.padding(start = 24.dp)
                 )
             }

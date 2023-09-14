@@ -5,6 +5,8 @@ import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.mono.core.designsystem.theme.MonoTheme
 
 @Composable
 fun MonoListItem(
@@ -25,4 +27,14 @@ fun MonoListItem(
         trailingContent = trailingContent,
         colors = colors
     )
+}
+
+@Preview
+@Composable
+fun MonoListItemPreview(){
+    MonoTheme {
+        MonoListItem(
+            headlineContent = { /*TODO*/ }
+        )
+    }
 }

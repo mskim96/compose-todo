@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,8 +51,8 @@ internal fun TaskItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            verticalAlignment = if (task.description.isNotEmpty()) Alignment.Top else Alignment.CenterVertically
+                .padding(start = 4.dp, end = 8.dp),
+            verticalAlignment = if (task.detail.isNotEmpty()) Alignment.Top else Alignment.CenterVertically
         ) {
             Checkbox(
                 checked = task.isCompleted,
@@ -61,16 +62,22 @@ internal fun TaskItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = task.title,
-                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (task.isCompleted) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.onSurface,
+                    textDecoration = if (task.isCompleted) {
+                        TextDecoration.LineThrough
+                    } else {
+                        null
+                    },
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 5
+                    maxLines = 5,
+                    style = MaterialTheme.typography.bodyLarge
                 )
-                if (task.description.isNotEmpty()) {
+                if (task.detail.isNotEmpty()) {
                     Text(
-                        text = task.description,
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = task.detail,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 2
+                        maxLines = 2,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 formattedDate?.let { date ->
@@ -102,7 +109,7 @@ private fun TaskFullItemPreview() {
                 task = Task(
                     id = "",
                     title = "Task preview",
-                    description = "Description preview",
+                    detail = "Description preview",
                     isCompleted = true,
                     isBookmarked = true,
                     date = LocalDate.of(2023, 8, 24),

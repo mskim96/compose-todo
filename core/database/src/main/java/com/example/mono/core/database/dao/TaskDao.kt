@@ -2,7 +2,9 @@ package com.example.mono.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
+import com.example.mono.core.database.model.PopulatedTaskEntity
 import com.example.mono.core.database.model.TaskEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,21 +20,23 @@ interface TaskDao {
      * @param taskId the task id.
      * @return the task with taskId.
      */
+    @Transaction
     @Query(
         value = """
             SELECT * FROM tasks 
             WHERE id = :taskId
         """
     )
-    fun getTaskEntity(taskId: String): Flow<TaskEntity>
+    fun getTask(taskId: String): Flow<PopulatedTaskEntity>
 
     /**
      * Observe list of tasks.
      *
      * @return All task entities.
      */
+    @Transaction
     @Query(value = "SELECT * FROM tasks")
-    fun getTaskEntities(): Flow<List<TaskEntity>>
+    fun getTasks(): Flow<List<PopulatedTaskEntity>>
 
     /**
      * Select a task by id.
@@ -40,13 +44,14 @@ interface TaskDao {
      * @param taskId the task id.
      * @return the task with taskId.
      */
+    @Transaction
     @Query(
         value = """
             SELECT * FROM tasks 
             WHERE id = :taskId
         """
     )
-    suspend fun getOnOffTaskEntity(taskId: String): TaskEntity?
+    suspend fun getOnOffTask(taskId: String): PopulatedTaskEntity?
 
     /**
      * Insert of update a task in the database. If a task already exists, replace it.
@@ -55,7 +60,6 @@ interface TaskDao {
      */
     @Upsert
     suspend fun upsertTask(task: TaskEntity)
-
 
     /**
      * Update the complete status of a task.
@@ -75,15 +79,15 @@ interface TaskDao {
      * Update the bookmark status of a task.
      *
      * @param taskId the task id.
-     * @param isBookmarked
+     * @param bookmarked change the task's state from bookmark.
      */
     @Query(
         value = """
-            UPDATE tasks SET isBookmarked = :isBookmarked
+            UPDATE tasks SET isBookmarked = :bookmarked
             WHERE id = :taskId
         """
     )
-    suspend fun updateBookmarked(taskId: String, isBookmarked: Boolean)
+    suspend fun setTaskBookmarked(taskId: String, bookmarked: Boolean)
 
     /**
      * Delete a task by id.

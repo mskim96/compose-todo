@@ -4,7 +4,7 @@ import com.example.mono.core.common.scope.Dispatcher
 import com.example.mono.core.common.scope.MonoDispatchers.Default
 import com.example.mono.core.data.model.asEntity
 import com.example.mono.core.database.dao.TaskDao
-import com.example.mono.core.database.model.TaskEntity
+import com.example.mono.core.database.model.PopulatedTaskEntity
 import com.example.mono.core.database.model.asExternalModel
 import com.example.mono.core.model.Task
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,26 +17,26 @@ import java.util.UUID
 import javax.inject.Inject
 
 class DefaultTaskRepository @Inject constructor(
-    private val localDatasource: TaskDao,
+    private val taskDao: TaskDao,
     @Dispatcher(Default) private val dispatcher: CoroutineDispatcher
 ) : TaskRepository {
 
-    override fun getTasksStream(): Flow<List<Task>> = localDatasource.getTaskEntities()
+    override fun getTasksStream(): Flow<List<Task>> = taskDao.getTasks()
         .map { tasks ->
             withContext(dispatcher) {
-                tasks.map(TaskEntity::asExternalModel)
+                tasks.map(PopulatedTaskEntity::asExternalModel)
             }
         }
 
     override fun getTaskStream(taskId: String): Flow<Task> =
-        localDatasource.getTaskEntity(taskId).map(TaskEntity::asExternalModel)
+        taskDao.getTask(taskId).map(PopulatedTaskEntity::asExternalModel)
 
     override suspend fun getTask(taskId: String): Task? =
-        localDatasource.getOnOffTaskEntity(taskId)?.asExternalModel()
+        taskDao.getOnOffTask(taskId)?.asExternalModel()
 
     override suspend fun createTask(
         title: String,
-        description: String,
+        detail: String,
         isBookmarked: Boolean,
         date: LocalDate?,
         time: LocalTime?,
@@ -48,59 +48,49 @@ class DefaultTaskRepository @Inject constructor(
         val task = Task(
             id = taskId,
             title = title,
-            description = description,
+            detail = detail,
             date = date,
             time = time,
             isCompleted = false,
             isBookmarked = isBookmarked,
             taskListId = taskListId
         )
-        localDatasource.upsertTask(task.asEntity())
+        taskDao.upsertTask(task.asEntity())
         return taskId
     }
 
     override suspend fun updateTask(
         taskId: String,
         title: String,
-        description: String,
-        isCompleted: Boolean,
-        isBookmarked: Boolean,
+        detail: String,
         date: LocalDate?,
-        time: LocalTime?
+        time: LocalTime?,
+        taskListId: String?,
     ) {
         val task = getTask(taskId)?.copy(
             title = title,
-            description = description,
-            isCompleted = isCompleted,
-            isBookmarked = isBookmarked,
+            detail = detail,
             date = date,
-            time = time
+            time = time,
+            taskListId = taskListId
         ) ?: throw Exception("Task (id $taskId) not found.")
 
-        localDatasource.upsertTask(task.asEntity())
+        taskDao.upsertTask(task.asEntity())
     }
 
-    override suspend fun completeTask(taskId: String) {
-        localDatasource.updateCompleted(taskId = taskId, isCompleted = true)
+    override suspend fun updateCompleteTask(taskId: String, completed: Boolean) {
+        taskDao.updateCompleted(taskId = taskId, isCompleted = completed)
     }
 
-    override suspend fun activeTask(taskId: String) {
-        localDatasource.updateCompleted(taskId = taskId, isCompleted = false)
-    }
-
-    override suspend fun addTaskBookmark(taskId: String) {
-        localDatasource.updateBookmarked(taskId = taskId, isBookmarked = true)
-    }
-
-    override suspend fun removeTaskBookmark(taskId: String) {
-        localDatasource.updateBookmarked(taskId = taskId, isBookmarked = false)
+    override suspend fun updateTaskBookmark(taskId: String, bookmarked: Boolean) {
+        taskDao.setTaskBookmarked(taskId = taskId, bookmarked = bookmarked)
     }
 
     override suspend fun clearCompletedTask() {
-        localDatasource.deleteCompleted()
+        taskDao.deleteCompleted()
     }
 
     override suspend fun deleteTask(taskId: String) {
-        localDatasource.deleteTask(taskId)
+        taskDao.deleteTask(taskId)
     }
 }

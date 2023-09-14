@@ -2,6 +2,7 @@ package com.example.mono.core.common.datetime
 
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -27,6 +28,20 @@ fun LocalDate.toFormattedDate(): String {
 fun LocalDate.toDateMillis(): Long {
     val epochDays = ChronoUnit.DAYS.between(LocalDate.of(1970, 1, 1), this)
     return epochDays * 24 * 60 * 60 * 1000
+}
+
+/**
+ * An extension function that combine [LocalDate] with [LocalTime].
+ */
+fun LocalDate.combineWithTime(time: LocalTime?): String {
+    val dateText = this.toFormattedDate()
+    val timeText = time?.toFormattedTime()
+
+    return if (timeText != null) {
+        "$dateText $timeText"
+    } else {
+        dateText
+    }
 }
 
 /**

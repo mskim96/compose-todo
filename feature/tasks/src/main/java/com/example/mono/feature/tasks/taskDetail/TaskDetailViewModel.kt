@@ -3,12 +3,23 @@ package com.example.mono.feature.tasks.taskDetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mono.core.common.scope.Dispatcher
+import com.example.mono.core.common.scope.MonoDispatchers.IO
+import com.example.mono.core.data.repository.SubTaskRepository
+import com.example.mono.core.data.repository.TaskListRepository
 import com.example.mono.core.data.repository.TaskRepository
+import com.example.mono.core.model.SubTask
+import com.example.mono.core.model.Task
+import com.example.mono.core.model.TaskList
 import com.example.mono.feature.tasks.navigation.TaskIdArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -20,93 +31,197 @@ import javax.inject.Inject
  */
 data class TaskDetailUiState(
     val title: String = "",
-    val description: String = "",
-    val isCompleted: Boolean = false,
-    val isBookmarked: Boolean = false,
+    val detail: String = "",
+    val isTaskCompleted: Boolean = false,
+    val isTaskBookmarked: Boolean = false,
     val date: LocalDate? = null,
     val time: LocalTime? = null,
-    val isTaskDeleted: Boolean = false,
-    val isTaskSaved: Boolean = false
+    val taskList: TaskList? = null,
+    val isLoading: Boolean = false,
+    val isTaskSaved: Boolean = false,
+    val isTaskDeleted: Boolean = false
 )
 
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
-    savedStateHandle: SavedStateHandle
+    private val subTaskRepository: SubTaskRepository,
+    private val taskListRepository: TaskListRepository,
+    @Dispatcher(IO) private val dispatcher: CoroutineDispatcher,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    // Task id from navigation back stack entry.
     private val taskId = TaskIdArgs(savedStateHandle).taskId
 
-    private val _uiState = MutableStateFlow(TaskDetailUiState())
-    val uiState: StateFlow<TaskDetailUiState> = _uiState.asStateFlow()
+    // Initial snapshot for detecting changes in task.
+    private var snapshotTask: Task? = null
+
+    private val _taskUiState = MutableStateFlow(TaskDetailUiState())
+    val taskUiState: StateFlow<TaskDetailUiState> = _taskUiState.asStateFlow()
+
+    val subTaskUiState = subTaskRepository.getSubTasksStream(taskId)
+        .map(SubTaskUiState::Success)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = SubTaskUiState.Loading
+        )
+
+    val taskListUiState = taskListRepository.getTaskLists()
+        .map(TaskListUiState::Success)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = TaskListUiState.Loading
+        )
 
     init {
         loadTask(taskId)
     }
 
-    fun updateTask() {
+    /**
+     * When the user triggers a back button event, the logic to detect change in Task.
+     * The logic to update when there are changes or execute the previous back button event when there are no changes.
+     *
+     * @param onBackClick default back button event.
+     */
+    fun saveTask(onBackClick: () -> Unit) {
+        if (isTaskChanged(taskUiState.value)) {
+            updateTask(); onBackClick()
+        } else {
+            onBackClick()
+        }
+    }
+
+    fun updateTaskCompleted(completed: Boolean) {
         viewModelScope.launch {
-            taskRepository.updateTask(
-                taskId = taskId,
-                title = uiState.value.title,
-                description = uiState.value.description,
-                isCompleted = uiState.value.isCompleted,
-                isBookmarked = uiState.value.isBookmarked,
-                date = uiState.value.date,
-                time = uiState.value.time,
-            )
-            _uiState.update {
-                it.copy(isTaskSaved = true)
+            taskRepository.updateCompleteTask(taskId, completed)
+            _taskUiState.update {
+                it.copy(isTaskCompleted = completed, isTaskSaved = true)
             }
         }
     }
 
-    fun updateCompleted(completed: Boolean) {
+    fun updateTaskBookmark(bookmarked: Boolean) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isCompleted = completed) }
-            updateTask()
+            taskRepository.updateTaskBookmark(taskId, bookmarked)
+            _taskUiState.update {
+                it.copy(isTaskBookmarked = bookmarked)
+            }
         }
     }
 
-    fun deleteTask() = viewModelScope.launch {
-        taskRepository.deleteTask(taskId)
-        _uiState.update {
-            it.copy(isTaskDeleted = true)
+    fun deleteTask() {
+        viewModelScope.launch {
+            taskRepository.deleteTask(taskId)
+            _taskUiState.update {
+                it.copy(isTaskDeleted = true)
+            }
         }
     }
 
     fun updateTitle(newTitle: String) {
-        _uiState.update { it.copy(title = newTitle) }
+        _taskUiState.update { it.copy(title = newTitle) }
     }
 
-    fun updateDescription(newDescription: String) {
-        _uiState.update { it.copy(description = newDescription) }
+    fun updateDetail(newDescription: String) {
+        _taskUiState.update { it.copy(detail = newDescription) }
     }
 
     fun updateDateTime(newDate: LocalDate?, newTime: LocalTime?) {
-        _uiState.update { it.copy(date = newDate, time = newTime) }
+        _taskUiState.update { it.copy(date = newDate, time = newTime) }
     }
 
-    fun toggleBookmark(bookmarked: Boolean) {
-        _uiState.update { it.copy(isBookmarked = bookmarked) }
+    fun updateTaskList(newTaskList: TaskList?) {
+        _taskUiState.update { it.copy(taskList = newTaskList) }
     }
 
-    private fun loadTask(taskId: String) {
+    fun createSubTask() {
+        viewModelScope.launch(dispatcher) {
+            subTaskRepository.createSubTask(taskId = taskId)
+        }
+    }
+
+    fun editSubTask(subTaskId: String, title: String) {
+        viewModelScope.launch(dispatcher) {
+            subTaskRepository.updateSubTask(
+                subTaskId = subTaskId,
+                title = title
+            )
+        }
+    }
+
+    fun updateSubTaskComplete(subTask: SubTask, completed: Boolean) {
+        viewModelScope.launch(dispatcher) {
+            subTaskRepository.updateCompletedSubTask(subTask.id, completed)
+        }
+    }
+
+    fun deleteSubTask(subTaskId: String) {
+        viewModelScope.launch(dispatcher) {
+            subTaskRepository.deleteSubTask(subTaskId)
+        }
+    }
+
+    private fun updateTask() {
         viewModelScope.launch {
-            taskRepository.getTask(taskId).let { task ->
-                if (task != null) {
-                    _uiState.update {
-                        it.copy(
-                            title = task.title,
-                            description = task.description,
-                            date = task.date,
-                            time = task.time,
-                            isBookmarked = task.isBookmarked,
-                            isCompleted = task.isCompleted
-                        )
-                    }
+            taskRepository.updateTask(
+                taskId = taskId,
+                title = taskUiState.value.title,
+                detail = taskUiState.value.detail,
+                date = taskUiState.value.date,
+                time = taskUiState.value.time,
+                taskListId = taskUiState.value.taskList?.id
+            )
+        }
+    }
+
+    /**
+     * In the data layer, load the Task and set it in the state and snapshot.
+     */
+    private fun loadTask(taskId: String) {
+        _taskUiState.update {
+            it.copy(isLoading = true)
+        }
+        viewModelScope.launch {
+            val currentTask = taskRepository.getTask(taskId)
+            if (currentTask != null) {
+                snapshotTask = currentTask
+                val currentTaskList = currentTask.taskListId?.let {
+                    taskListRepository.getOneOffTaskGroup(it)
                 }
+                _taskUiState.update {
+                    it.copy(
+                        title = currentTask.title,
+                        detail = currentTask.detail,
+                        isTaskBookmarked = currentTask.isBookmarked,
+                        isTaskCompleted = currentTask.isCompleted,
+                        date = currentTask.date,
+                        time = currentTask.time,
+                        taskList = currentTaskList,
+                        isLoading = false
+                    )
+                }
+            } else {
+                _taskUiState.update { it.copy(isLoading = false) }
             }
         }
+    }
+
+    /**
+     * The logic to compare the current state with the snapshot task to determine if there are
+     * any change.
+     *
+     * @param currentState current task detail state.
+     */
+    private fun isTaskChanged(currentState: TaskDetailUiState): Boolean {
+        return currentState.title != snapshotTask?.title ||
+                currentState.detail != snapshotTask?.detail ||
+                currentState.isTaskCompleted != snapshotTask?.isCompleted ||
+                currentState.isTaskBookmarked != snapshotTask?.isBookmarked ||
+                currentState.date != snapshotTask?.date ||
+                currentState.time != snapshotTask?.time ||
+                currentState.taskList?.id != snapshotTask?.taskListId
     }
 }

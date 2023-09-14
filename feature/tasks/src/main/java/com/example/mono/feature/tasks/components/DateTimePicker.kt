@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -32,18 +33,18 @@ import java.time.LocalTime
 /**
  * [MonoDateTimePicker] A Composable with the added dependency of a Time Picker to a Date Picker.
  *
- * @param onDismiss Called when the user tries to dismiss.
- * @param onConfirm Called when the user confirm dialog action.
  * @param previousDate previous date if it had date.
  * @param previousTime previous time if it had time.
+ * @param onDismiss Called when the user tries to dismiss.
+ * @param onConfirm Called when the user confirm dialog action.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonoDateTimePicker(
-    onDismiss: () -> Unit,
-    onConfirm: (date: LocalDate?, time: LocalTime?) -> Unit,
     previousDate: LocalDate?,
     previousTime: LocalTime?,
+    onDismiss: () -> Unit,
+    onConfirm: (date: LocalDate?, time: LocalTime?) -> Unit
 ) {
     val currentLocalDateTime = LocalDateTime.now()
 
@@ -69,9 +70,14 @@ fun MonoDateTimePicker(
         onConfirm = { onConfirm(dateState.selectedDateMillis.toLocalDate(), time); onDismiss() },
         state = dateState
     ) {
-        IconRow(
-            icon = Icons.Default.AccessTime,
-            onClickRow = { showTimeDialog = true }
+        IconRowItem(
+            iconContent = {
+                Icon(
+                    imageVector = Icons.Default.AccessTime,
+                    contentDescription = null
+                )
+            },
+            onClick = { showTimeDialog = true }
         ) {
             Spacer(modifier = Modifier.width(8.dp))
             AnimatedContent(targetState = time, label = "create_time") {
@@ -79,7 +85,7 @@ fun MonoDateTimePicker(
                     MonoInputChip(
                         label = { Text(text = it.toFormattedTime()) },
                         onClick = { showTimeDialog = true },
-                        onTrailingClick = { time = null }
+                        onTrailingIconClick = { time = null }
                     )
                 } else {
                     Text(text = stringResource(id = R.string.placeholder_time))

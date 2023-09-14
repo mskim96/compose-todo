@@ -1,7 +1,9 @@
 package com.example.mono.core.data.di
 
+import com.example.mono.core.data.repository.DefaultSubTaskRepository
 import com.example.mono.core.data.repository.DefaultTaskListRepository
 import com.example.mono.core.data.repository.DefaultTaskRepository
+import com.example.mono.core.data.repository.SubTaskRepository
 import com.example.mono.core.data.repository.TaskListRepository
 import com.example.mono.core.data.repository.TaskRepository
 import dagger.Binds
@@ -15,6 +17,9 @@ interface DataModule {
 
     @Binds
     fun bindsTaskRepository(taskRepository: DefaultTaskRepository): TaskRepository
+
+    @Binds
+    fun bindsSubTaskRepository(subTaskRepository: DefaultSubTaskRepository): SubTaskRepository
 
     @Binds
     fun bindsTaskGroupRepository(taskGroupRepository: DefaultTaskListRepository): TaskListRepository

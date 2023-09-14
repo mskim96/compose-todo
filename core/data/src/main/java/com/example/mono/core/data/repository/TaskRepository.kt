@@ -34,7 +34,7 @@ interface TaskRepository {
      * Create the new task.
      *
      * @param title title of the task.
-     * @param description description of the task.
+     * @param detail description of the task.
      * @param isBookmarked The bookmarked status of the task.
      * @param date date of the task.
      * @param time time of the task.
@@ -44,7 +44,7 @@ interface TaskRepository {
      */
     suspend fun createTask(
         title: String,
-        description: String,
+        detail: String,
         isBookmarked: Boolean,
         date: LocalDate?,
         time: LocalTime?,
@@ -56,49 +56,33 @@ interface TaskRepository {
      *
      * @param taskId the task id.
      * @param title title of the task.
-     * @param description description of the task.
-     * @param isCompleted The completion status of the task.
-     * @param isBookmarked The bookmarked status of the task.
+     * @param detail description of the task.
      * @param date date of the task.
      * @param time time of the task.
      */
     suspend fun updateTask(
         taskId: String,
         title: String,
-        description: String,
-        isCompleted: Boolean,
-        isBookmarked: Boolean,
+        detail: String,
         date: LocalDate?,
-        time: LocalTime?
+        time: LocalTime?,
+        taskListId: String?
     )
 
     /**
-     * Update the complete status of the task.
+     * Update the complete status or active the task.
      *
      * @param taskId the task id.
+     * @param completed completed or active status of the task.
      */
-    suspend fun completeTask(taskId: String)
+    suspend fun updateCompleteTask(taskId: String, completed: Boolean)
 
     /**
-     * Update the active status of the task.
+     * Add a bookmark or remove bookmark to the task.
      *
      * @param taskId the task id.
      */
-    suspend fun activeTask(taskId: String)
-
-    /**
-     * Add a bookmark to the task.
-     *
-     * @param taskId the task id.
-     */
-    suspend fun addTaskBookmark(taskId: String)
-
-    /**
-     * Remove the bookmark from the task.
-     *
-     * @param taskId the task id.
-     */
-    suspend fun removeTaskBookmark(taskId: String)
+    suspend fun updateTaskBookmark(taskId: String, bookmarked: Boolean)
 
     /**
      * Delete all complete tasks.
