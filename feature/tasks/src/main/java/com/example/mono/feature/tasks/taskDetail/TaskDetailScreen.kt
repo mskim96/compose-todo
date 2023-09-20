@@ -59,10 +59,10 @@ import com.example.mono.core.designsystem.component.MonoTextField
 import com.example.mono.core.designsystem.theme.MonoTheme
 import com.example.mono.core.model.SubTask
 import com.example.mono.core.model.TaskList
+import com.example.mono.core.ui.TaskDateTimeChip
 import com.example.mono.feature.tasks.R
 import com.example.mono.feature.tasks.components.IconRowItem
 import com.example.mono.feature.tasks.components.MonoDateTimePicker
-import com.example.mono.feature.tasks.components.TaskDateTimeChip
 import com.example.mono.feature.tasks.components.TaskDetailBottomAppBar
 import com.example.mono.feature.tasks.components.TaskDetailTopAppBar
 import java.time.LocalDate

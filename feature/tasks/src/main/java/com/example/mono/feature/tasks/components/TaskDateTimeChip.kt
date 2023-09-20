@@ -8,18 +8,3 @@ import com.example.mono.core.designsystem.component.MonoInputChip
 import java.time.LocalDate
 import java.time.LocalTime
 
-@Composable
-internal fun TaskDateTimeChip(
-    date: LocalDate,
-    time: LocalTime?,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    onTrailingIconClick: (() -> Unit)? = null
-) {
-    MonoInputChip(
-        onClick = onClick,
-        label = { Text(text = date.combineWithTime(time)) },
-        modifier = modifier,
-        onTrailingIconClick = onTrailingIconClick
-    )
-}

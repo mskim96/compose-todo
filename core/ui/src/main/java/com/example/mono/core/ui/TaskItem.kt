@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mono.core.common.datetime.combineWithTime
 import com.example.mono.core.common.datetime.toFormattedDate
 import com.example.mono.core.common.datetime.toFormattedTime
 import com.example.mono.core.designsystem.component.MonoInputChip
@@ -31,23 +32,17 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
-internal fun TaskItem(
+fun TaskItem(
     task: Task,
     onCheckedChange: (Boolean) -> Unit,
     onTaskClick: (Task) -> Unit,
     toggleBookmark: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedDate = task.date?.let(LocalDate::toFormattedDate)
-    val formattedTime = task.time?.let(LocalTime::toFormattedTime)
-
-    val bookmarkedIcon = if (task.isBookmarked) {
-        Icons.Default.Bookmarks
-    } else {
-        Icons.Outlined.Bookmarks
-    }
-
-    Box(modifier = modifier.clickable { onTaskClick(task) }) {
+    Box(modifier = modifier
+        .clickable { onTaskClick(task) }
+        .padding(vertical = 8.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,24 +75,44 @@ internal fun TaskItem(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                formattedDate?.let { date ->
-                    MonoInputChip(
-                        label = {
-                            Text(text = formattedTime?.let { time -> "$date $time" } ?: date)
-                        },
-                        onClick = {}
+                task.date?.let {
+                    TaskDateTimeChip(
+                        date = it,
+                        time = task.time,
+                        onClick = { /*TODO*/ }
                     )
                 }
             }
 
             IconButton(onClick = { toggleBookmark(!task.isBookmarked) }) {
                 Icon(
-                    imageVector = bookmarkedIcon,
+                    imageVector = if (task.isBookmarked) {
+                        Icons.Default.Bookmarks
+                    } else {
+                        Icons.Outlined.Bookmarks
+                    },
                     contentDescription = null
                 )
             }
         }
     }
+}
+
+@Composable
+fun TaskDateTimeChip(
+    date: LocalDate,
+    time: LocalTime?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onTrailingIconClick: (() -> Unit)? = null
+) {
+    val dateWithTime = date.combineWithTime(time)
+    MonoInputChip(
+        onClick = onClick,
+        label = { Text(text = dateWithTime) },
+        modifier = modifier,
+        onTrailingIconClick = onTrailingIconClick
+    )
 }
 
 @Preview(name = "Task full item preview")
