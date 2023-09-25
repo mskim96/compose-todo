@@ -2,6 +2,7 @@ package com.example.mono.core.database.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.mono.core.model.Task
 import java.time.LocalDate
@@ -19,6 +20,9 @@ import java.time.LocalTime
             childColumns = ["taskListId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["taskListId"])
     ]
 )
 data class TaskEntity(

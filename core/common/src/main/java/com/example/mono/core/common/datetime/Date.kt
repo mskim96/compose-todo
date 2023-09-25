@@ -9,6 +9,10 @@ import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
+enum class CloseDate {
+    Yesterday, Today, Tomorrow
+}
+
 /**
  * An extension function that convert a [LocalDate] to formatted date string.
  *
@@ -17,9 +21,16 @@ import java.util.Locale
  * ```
  */
 fun LocalDate.toFormattedDate(): String {
+    val datePeriod = ChronoUnit.DAYS.between(LocalDate.now(), this)
     val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
         .withLocale(Locale.getDefault())
-    return this.format(dateFormatter)
+
+    return when (datePeriod) {
+        0L -> CloseDate.Today.name
+        -1L -> CloseDate.Yesterday.name
+        1L -> CloseDate.Tomorrow.name
+        else -> this.format(dateFormatter)
+    }
 }
 
 /**

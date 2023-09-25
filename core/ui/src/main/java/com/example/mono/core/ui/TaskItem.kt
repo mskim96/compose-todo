@@ -23,9 +23,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mono.core.common.datetime.combineWithTime
-import com.example.mono.core.common.datetime.toFormattedDate
-import com.example.mono.core.common.datetime.toFormattedTime
 import com.example.mono.core.designsystem.component.MonoInputChip
+import com.example.mono.core.designsystem.icon.MonoIcons
 import com.example.mono.core.designsystem.theme.MonoTheme
 import com.example.mono.core.model.Task
 import java.time.LocalDate
@@ -87,11 +86,16 @@ fun TaskItem(
             IconButton(onClick = { toggleBookmark(!task.isBookmarked) }) {
                 Icon(
                     imageVector = if (task.isBookmarked) {
-                        Icons.Default.Bookmarks
+                        MonoIcons.Bookmark
                     } else {
-                        Icons.Outlined.Bookmarks
+                        MonoIcons.BookmarkOutlined
                     },
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = if (task.isBookmarked) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
                 )
             }
         }
@@ -106,10 +110,9 @@ fun TaskDateTimeChip(
     modifier: Modifier = Modifier,
     onTrailingIconClick: (() -> Unit)? = null
 ) {
-    val dateWithTime = date.combineWithTime(time)
     MonoInputChip(
         onClick = onClick,
-        label = { Text(text = dateWithTime) },
+        label = { Text(text = date.combineWithTime(time)) },
         modifier = modifier,
         onTrailingIconClick = onTrailingIconClick
     )

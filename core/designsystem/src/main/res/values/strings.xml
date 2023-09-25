@@ -4,4 +4,15 @@
 
     <string name="dialog_dismiss">Cancel</string>
     <string name="dialog_confirm">OK</string>
+    <string name="dialog_confirm_save">Save</string>
+
+    <string name="coming_screen_title">Screen under construction</string>
+    <string name="coming_screen_subtitle">This screen is still under construction.</string>
+    <string name="no_tasks">Add your to-dos appear here</string>
+    <string name="no_tasks_bookmark">No tasks with bookmark yet</string>
+    <string name="no_tasks_reminder">To-dos with upcoming reminders appear here</string>
+
+    <string name="placeholder_task_title">New Task</string>
+    <string name="placeholder_task_detail">Add detail</string>
+    <string name="placeholder_time">Add Time</string>
 </resources>

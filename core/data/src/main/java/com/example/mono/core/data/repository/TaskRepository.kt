@@ -5,7 +5,19 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalTime
 
+data class TaskQuery(
+    val filterTaskListIds: Set<String>? = null,
+    val filterBookmark: Boolean? = null
+)
+
 interface TaskRepository {
+
+    fun getTasksStream(
+        query: TaskQuery = TaskQuery(
+            filterTaskListIds = null,
+            filterBookmark = null
+        )
+    ): Flow<List<Task>>
 
     /**
      * Gets the tasks as a stream.
@@ -88,6 +100,13 @@ interface TaskRepository {
      * Delete all complete tasks.
      */
     suspend fun clearCompletedTask()
+
+    suspend fun clearCompletedTask(
+        query: TaskQuery = TaskQuery(
+            filterTaskListIds = null,
+            filterBookmark = null
+        )
+    )
 
     /**
      * Delete a specific task.

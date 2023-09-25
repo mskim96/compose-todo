@@ -113,5 +113,5 @@ object MonoDrawerDefaults {
     fun drawerSelectedContainerColor() = MaterialTheme.colorScheme.primaryContainer
 
     @Composable
-    fun drawerSelectedContainerShape() = MaterialTheme.shapes.small
+    fun drawerSelectedContainerShape() = MaterialTheme.shapes.extraLarge
 }

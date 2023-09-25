@@ -26,10 +26,10 @@ class DefaultTaskListRepository @Inject constructor(
     override fun getTaskList(taskListId: String): Flow<TaskList> =
         taskListDao.getTaskList(taskListId).map(TaskListEntity::asExternalModel)
 
-    override suspend fun getOneOffTaskGroup(taskListId: String): TaskList? =
+    override suspend fun getOneOffTaskList(taskListId: String): TaskList? =
         taskListDao.getOneOffTaskListEntity(taskListId)?.asExternalModel()
 
-    override suspend fun createTaskGroup(name: String) {
+    override suspend fun createTaskList(name: String) {
         val groupId = withContext(dispatcher) {
             UUID.randomUUID().toString()
         }
@@ -40,14 +40,14 @@ class DefaultTaskListRepository @Inject constructor(
         taskListDao.upsertTaskList(taskList.asEntity())
     }
 
-    override suspend fun updateTaskGroup(taskListId: String, name: String) {
-        val taskList = getOneOffTaskGroup(taskListId)
+    override suspend fun updateTaskList(taskListId: String, name: String) {
+        val taskList = getOneOffTaskList(taskListId)
             ?.copy(name = name)
             ?: throw Exception("Task list (id $taskListId) not found.")
         taskListDao.upsertTaskList(taskList.asEntity())
     }
 
-    override suspend fun deleteTaskGroup(taskListId: String) {
+    override suspend fun deleteTaskList(taskListId: String) {
         taskListDao.deleteTaskList(taskListId)
     }
 }

@@ -36,6 +36,12 @@
             <option value="$PROJECT_DIR$/core/network" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/bookmarks" />
+            <option value="$PROJECT_DIR$/feature/calendar" />
+            <option value="$PROJECT_DIR$/feature/detail" />
+            <option value="$PROJECT_DIR$/feature/reminders" />
+            <option value="$PROJECT_DIR$/feature/settings" />
+            <option value="$PROJECT_DIR$/feature/tasklist" />
             <option value="$PROJECT_DIR$/feature/tasks" />
           </set>
         </option>

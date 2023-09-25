@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="tasks">Tasks</string>
+
     <string name="task_group_add_edit">Edit task group</string>
     <string name="placeholder_task_group">Create new group</string>
 

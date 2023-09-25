@@ -43,6 +43,12 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(project(":feature:tasks"))
+    implementation(project(":feature:bookmarks"))
+    implementation(project(":feature:calendar"))
+    implementation(project(":feature:reminders"))
+    implementation(project(":feature:tasklist"))
+    implementation(project(":feature:detail"))
+    implementation(project(":feature:settings"))
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)

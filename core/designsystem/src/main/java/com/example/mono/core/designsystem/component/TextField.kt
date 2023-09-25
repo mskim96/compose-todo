@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
@@ -21,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mono.core.designsystem.icon.MonoIcons
 import com.example.mono.core.designsystem.theme.MonoTheme
 
 /**
@@ -76,6 +80,8 @@ fun MonoTextField(
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     TextField(
         value = value,
@@ -93,6 +99,8 @@ fun MonoTextField(
         },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         singleLine = true,
         colors = TextFieldDefaults.colors(
             focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -109,7 +117,7 @@ fun MonoTextField(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MonoTestTextField(
+fun MonoNoPaddingTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -178,7 +186,10 @@ fun MonoOutlinedTextFieldPreview() {
                 MonoTextField(
                     value = "",
                     onValueChange = {},
-                    placeholder = { Text(text = "Outlined textField") }
+                    placeholder = { Text(text = "Outlined textField") },
+                    leadingIcon = {
+                        Icon(imageVector = MonoIcons.Add, contentDescription = null)
+                    }
                 )
             }
         }

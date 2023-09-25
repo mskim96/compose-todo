@@ -9,11 +9,11 @@ interface TaskListRepository {
 
     fun getTaskList(taskListId: String): Flow<TaskList>
 
-    suspend fun getOneOffTaskGroup(taskListId: String): TaskList?
+    suspend fun getOneOffTaskList(taskListId: String): TaskList?
 
-    suspend fun createTaskGroup(name: String)
+    suspend fun createTaskList(name: String)
 
-    suspend fun updateTaskGroup(taskListId: String, name: String)
+    suspend fun updateTaskList(taskListId: String, name: String)
 
-    suspend fun deleteTaskGroup(taskListId: String)
+    suspend fun deleteTaskList(taskListId: String)
 }

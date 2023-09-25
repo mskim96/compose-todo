@@ -38,6 +38,20 @@ interface TaskDao {
     @Query(value = "SELECT * FROM tasks")
     fun getTasks(): Flow<List<PopulatedTaskEntity>>
 
+    @Transaction
+    @Query(
+        value = """
+            SELECT * FROM tasks 
+            WHERE (:useFilterTaskListIds = 0 OR taskListId IN (:filterTaskListIds))
+            AND (:useFilterBookmark = 0 OR isBookmarked = 1)
+        """
+    )
+    fun getTasks(
+        useFilterTaskListIds: Boolean = false,
+        filterTaskListIds: Set<String> = emptySet(),
+        useFilterBookmark: Boolean = false,
+    ): Flow<List<PopulatedTaskEntity>>
+
     /**
      * Select a task by id.
      *
@@ -110,4 +124,17 @@ interface TaskDao {
      */
     @Query(value = "DELETE FROM tasks WHERE isCompleted = 1")
     suspend fun deleteCompleted(): Int
+
+    @Query(
+        value = """
+            DELETE FROM tasks
+            WHERE (:useFilterTaskListIds = 0 OR taskListId in (:filterTaskListIds))
+            AND (:useFilterBookmark = 0 OR isBookmarked = 1) AND isCompleted = 1
+        """
+    )
+    suspend fun deleteCompleted(
+        useFilterTaskListIds: Boolean = false,
+        filterTaskListIds: Set<String> = emptySet(),
+        useFilterBookmark: Boolean = false,
+    ): Int
 }

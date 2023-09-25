@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_new_task_list">Create new list</string>
+
+    <string name="drawer_task_lists">Lists</string>
+    <string name="drawer_task_lists_edit">Edit</string>
+
+    <!--  Edit Task list screen  -->
+    <string name="edit_task_lists">Edit Task lists</string>
+
+    <!--  Task list screen  -->
+    <string name="no_tasks">Add your to-dos appear here</string>
+
+    <!--  Delete dialog  -->
+    <string name="delete_task_list">Delete</string>
+    <string name="cancel_delete_task_list">Cancel</string>
+    <string name="delete_task_list_dialog_title">Delete Task list?</string>
+    <string name="delete_task_list_dialog_subtitle">Deleting this task list will remove all the tasks associated with it.</string>
+
+</resources>

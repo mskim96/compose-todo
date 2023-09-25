@@ -20,6 +20,12 @@ class DefaultTaskRepository @Inject constructor(
     private val taskDao: TaskDao,
     @Dispatcher(Default) private val dispatcher: CoroutineDispatcher
 ) : TaskRepository {
+    override fun getTasksStream(query: TaskQuery): Flow<List<Task>> = taskDao.getTasks(
+        useFilterTaskListIds = query.filterTaskListIds != null,
+        filterTaskListIds = query.filterTaskListIds ?: emptySet(),
+        useFilterBookmark = query.filterBookmark ?: false
+    )
+        .map { it.map(PopulatedTaskEntity::asExternalModel) }
 
     override fun getTasksStream(): Flow<List<Task>> = taskDao.getTasks()
         .map { tasks ->
@@ -88,6 +94,14 @@ class DefaultTaskRepository @Inject constructor(
 
     override suspend fun clearCompletedTask() {
         taskDao.deleteCompleted()
+    }
+
+    override suspend fun clearCompletedTask(query: TaskQuery) {
+        taskDao.deleteCompleted(
+            useFilterTaskListIds = query.filterTaskListIds != null,
+            filterTaskListIds = query.filterTaskListIds ?: emptySet(),
+            useFilterBookmark = query.filterBookmark ?: false
+        )
     }
 
     override suspend fun deleteTask(taskId: String) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_sub_tasks">Add subtasks</string>
+    <string name="move_task_list">Move task to</string>
+    <string name="delete_task">Delete</string>
+    <string name="no_task_list">No task list</string>
+    <string name="menu_delete_task">Delete task</string>
+    <string name="placeholder_title">Title</string>
+    <string name="placeholder_description">Add Description</string>
+    <string name="placeholder_subtask_title">Enter title</string>
+    <string name="placeholder_date_time">Add Date / Time</string>
+    <string name="task_mark_completed">Mark complete</string>
+    <string name="task_mark_activate">Mark active</string>
+</resources>
