@@ -1,3 +1,5 @@
+import com.example.mono.MonoBuildType
+
 plugins {
     id("mono.android.application")
     id("mono.android.application.compose")
@@ -17,8 +19,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = MonoBuildType.DEBUG.applicationIdSuffix
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            applicationIdSuffix = MonoBuildType.RELEASE.applicationIdSuffix
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -40,6 +46,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
     implementation(project(":core:network"))
+    implementation(project(":core:notifications"))
     implementation(project(":core:ui"))
 
     implementation(project(":feature:tasks"))

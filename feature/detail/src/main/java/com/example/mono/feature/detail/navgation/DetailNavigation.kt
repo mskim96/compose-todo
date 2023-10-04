@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.mono.feature.detail.TaskDetailRoute
 
 /**
@@ -14,17 +15,18 @@ import com.example.mono.feature.detail.TaskDetailRoute
 internal const val taskIdArgs = "taskId"
 
 /**
+ * Task detail route.
+ */
+internal const val taskDetailRoute = "task_detail_route"
+private const val DEEP_LINK_URI_PATTERN = "mono://$taskDetailRoute/{$taskIdArgs}"
+
+/**
  * Task id type safe arguments wrapper.
  */
 internal class TaskIdArgs(val taskId: String) {
     constructor(savedStateHandle: SavedStateHandle) :
             this(checkNotNull(savedStateHandle[taskIdArgs]) as String)
 }
-
-/**
- * Task detail route.
- */
-const val taskDetailRoute = "task_detail_route"
 
 /**
  * Navigate to task detail screen.
@@ -44,7 +46,10 @@ fun NavGraphBuilder.taskDetail(
     composable(
         route = "$taskDetailRoute/{$taskIdArgs}",
         arguments = listOf(
-            navArgument(taskIdArgs) { NavType.StringType }
+            navArgument(taskIdArgs) { type = NavType.StringType }
+        ),
+        deepLinks = listOf(
+            navDeepLink { uriPattern = DEEP_LINK_URI_PATTERN }
         )
     ) {
         TaskDetailRoute(

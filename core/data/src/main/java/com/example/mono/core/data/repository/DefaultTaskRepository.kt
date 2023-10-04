@@ -7,6 +7,7 @@ import com.example.mono.core.database.dao.TaskDao
 import com.example.mono.core.database.model.PopulatedTaskEntity
 import com.example.mono.core.database.model.asExternalModel
 import com.example.mono.core.model.Task
+import com.example.mono.core.notifications.notifier.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 class DefaultTaskRepository @Inject constructor(
     private val taskDao: TaskDao,
+    private val notifier: Notifier,
     @Dispatcher(Default) private val dispatcher: CoroutineDispatcher
 ) : TaskRepository {
     override fun getTasksStream(query: TaskQuery): Flow<List<Task>> = taskDao.getTasks(
@@ -82,6 +84,7 @@ class DefaultTaskRepository @Inject constructor(
         ) ?: throw Exception("Task (id $taskId) not found.")
 
         taskDao.upsertTask(task.asEntity())
+        setTaskNotification(task)
     }
 
     override suspend fun updateCompleteTask(taskId: String, completed: Boolean) {
@@ -106,5 +109,11 @@ class DefaultTaskRepository @Inject constructor(
 
     override suspend fun deleteTask(taskId: String) {
         taskDao.deleteTask(taskId)
+    }
+
+    private fun setTaskNotification(task: Task) {
+        if(task.date != null && task.time != null) {
+            notifier.setTaskNotification(task)
+        }
     }
 }

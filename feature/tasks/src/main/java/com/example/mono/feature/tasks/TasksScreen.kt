@@ -1,5 +1,7 @@
 package com.example.mono.feature.tasks
 
+import android.os.Build
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -40,6 +42,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,6 +68,9 @@ import com.example.mono.core.model.TaskCreationParams
 import com.example.mono.core.model.TaskSortingType
 import com.example.mono.core.ui.CreateTaskDialog
 import com.example.mono.core.ui.tasks
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 
 @Composable
 internal fun TasksRoute(
@@ -195,6 +202,7 @@ internal fun TasksScreen(
             )
         }
     }
+    NotificationPermissionEffect()
 }
 
 @Composable
@@ -547,4 +555,22 @@ fun DeleteCompletedTasksDialog(
             Text(text = "Completed tasks will be permanently deleted from this list unless the repeat.")
         }
     )
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun NotificationPermissionEffect() {
+    // Permission requests should only be made from an Activity Context, which is not present
+    // in previews.
+    if (LocalInspectionMode.current) return
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+    val notificationsPermissionState = rememberPermissionState(
+        android.Manifest.permission.POST_NOTIFICATIONS,
+    )
+    LaunchedEffect(notificationsPermissionState) {
+        val status = notificationsPermissionState.status
+        if (status is PermissionStatus.Denied && !status.shouldShowRationale) {
+            notificationsPermissionState.launchPermissionRequest()
+        }
+    }
 }
