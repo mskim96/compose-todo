@@ -1,6 +1,6 @@
 package com.example.mono.core.data.repository
 
-import com.example.mono.core.model.SubTask
+import com.example.mono.core.model.task.SubTask
 import kotlinx.coroutines.flow.Flow
 
 interface SubTaskRepository {

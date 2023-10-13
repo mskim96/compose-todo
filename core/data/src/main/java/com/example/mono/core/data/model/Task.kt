@@ -1,7 +1,7 @@
 package com.example.mono.core.data.model
 
 import com.example.mono.core.database.model.TaskEntity
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 
 /**
  * Converting the [Task] external model to a [TaskEntity].

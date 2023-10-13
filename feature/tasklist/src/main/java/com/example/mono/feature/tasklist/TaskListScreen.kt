@@ -59,9 +59,9 @@ import com.example.mono.core.designsystem.component.MonoIconDropdownMenu
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.core.designsystem.component.TasksEmptyContent
 import com.example.mono.core.designsystem.icon.MonoIcons
-import com.example.mono.core.model.Task
-import com.example.mono.core.model.TaskCreationParams
-import com.example.mono.core.model.TaskSortingType
+import com.example.mono.core.model.task.Task
+import com.example.mono.core.model.task.TaskCreationParams
+import com.example.mono.core.model.task.TaskSortingType
 import com.example.mono.core.ui.CreateTaskDialog
 import com.example.mono.core.ui.tasks
 

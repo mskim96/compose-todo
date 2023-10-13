@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.mono.core.common.datetime.dateTimeToMillis
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import com.example.mono.core.notifications.NotifyReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDate

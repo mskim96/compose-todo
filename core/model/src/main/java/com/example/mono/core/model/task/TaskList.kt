@@ -1,4 +1,4 @@
-package com.example.mono.core.model
+package com.example.mono.core.model.task
 
 /**
  * External data layer representation of a fully populated task list.

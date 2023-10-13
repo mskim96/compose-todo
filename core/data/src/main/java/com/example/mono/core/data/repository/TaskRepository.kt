@@ -1,6 +1,6 @@
 package com.example.mono.core.data.repository
 
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalTime

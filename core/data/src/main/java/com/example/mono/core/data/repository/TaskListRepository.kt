@@ -1,6 +1,6 @@
 package com.example.mono.core.data.repository
 
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 import kotlinx.coroutines.flow.Flow
 
 interface TaskListRepository {

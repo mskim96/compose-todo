@@ -47,7 +47,7 @@ import com.example.mono.core.designsystem.component.MonoTextField
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.core.designsystem.icon.MonoIcons
 import com.example.mono.core.designsystem.theme.MonoTheme
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 import com.example.mono.feature.tasklist.navigation.createTaskListType
 
 @OptIn(ExperimentalComposeUiApi::class)

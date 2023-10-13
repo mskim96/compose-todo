@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.mono.core.common.datetime.toFormattedDate
 import com.example.mono.core.data.repository.TaskQuery
 import com.example.mono.core.data.repository.TaskRepository
-import com.example.mono.core.model.Task
-import com.example.mono.core.model.TaskCreationParams
-import com.example.mono.core.model.TaskSortingType
+import com.example.mono.core.model.task.Task
+import com.example.mono.core.model.task.TaskCreationParams
+import com.example.mono.core.model.task.TaskSortingType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

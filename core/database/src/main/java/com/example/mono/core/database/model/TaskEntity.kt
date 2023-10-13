@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import java.time.LocalDate
 import java.time.LocalTime
 

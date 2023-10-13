@@ -2,7 +2,7 @@ package com.example.mono.core.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 
 /**
  * Defines a task list. It has 1:n relationship with [TaskEntity].

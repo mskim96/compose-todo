@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mono.core.data.repository.TaskListRepository
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 import com.example.mono.feature.tasklist.navigation.EditTaskListsModifyTypeArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

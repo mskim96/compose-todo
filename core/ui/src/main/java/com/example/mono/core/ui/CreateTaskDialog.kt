@@ -56,7 +56,7 @@ import com.example.mono.core.designsystem.component.MonoTextField
 import com.example.mono.core.designsystem.component.MonoTimePickerDialog
 import com.example.mono.core.designsystem.icon.MonoIcons
 import com.example.mono.core.designsystem.theme.MonoTheme
-import com.example.mono.core.model.TaskCreationParams
+import com.example.mono.core.model.task.TaskCreationParams
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

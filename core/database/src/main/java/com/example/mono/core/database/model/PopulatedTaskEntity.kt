@@ -2,7 +2,7 @@ package com.example.mono.core.database.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 
 /**
  * External data layer representation of a fully populated Task.

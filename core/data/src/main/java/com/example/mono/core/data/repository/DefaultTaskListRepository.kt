@@ -6,7 +6,7 @@ import com.example.mono.core.data.model.asEntity
 import com.example.mono.core.database.dao.TaskListDao
 import com.example.mono.core.database.model.TaskListEntity
 import com.example.mono.core.database.model.asExternalModel
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

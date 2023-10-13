@@ -6,7 +6,7 @@ import com.example.mono.core.data.model.asEntity
 import com.example.mono.core.database.dao.SubTaskDao
 import com.example.mono.core.database.model.SubTaskEntity
 import com.example.mono.core.database.model.asExternalModel
-import com.example.mono.core.model.SubTask
+import com.example.mono.core.model.task.SubTask
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

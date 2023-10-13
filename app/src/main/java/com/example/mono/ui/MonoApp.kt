@@ -32,7 +32,7 @@ import com.example.mono.core.designsystem.component.MonoModalNavigationDrawer
 import com.example.mono.core.designsystem.component.MonoModalSheet
 import com.example.mono.core.designsystem.component.MonoNavigationDrawerItem
 import com.example.mono.core.designsystem.icon.MonoIcons
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 import com.example.mono.feature.tasklist.navigation.createTaskListType
 import com.example.mono.feature.tasklist.navigation.editTaskListType
 import com.example.mono.navigation.MonoNavHost

@@ -1,4 +1,4 @@
-package com.example.mono.core.model
+package com.example.mono.core.model.task
 
 import java.time.LocalDate
 import java.time.LocalTime

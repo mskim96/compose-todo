@@ -6,7 +6,7 @@ import com.example.mono.core.data.model.asEntity
 import com.example.mono.core.database.dao.TaskDao
 import com.example.mono.core.database.model.PopulatedTaskEntity
 import com.example.mono.core.database.model.asExternalModel
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import com.example.mono.core.notifications.notifier.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

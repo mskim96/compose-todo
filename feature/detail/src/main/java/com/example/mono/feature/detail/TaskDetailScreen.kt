@@ -65,8 +65,8 @@ import com.example.mono.core.designsystem.component.MonoNoPaddingTextField
 import com.example.mono.core.designsystem.component.MonoTextField
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.core.designsystem.icon.MonoIcons
-import com.example.mono.core.model.SubTask
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.SubTask
+import com.example.mono.core.model.task.TaskList
 import com.example.mono.core.ui.IconRowItem
 import com.example.mono.core.ui.MonoDateTimePicker
 import com.example.mono.core.ui.TaskDateTimeChip

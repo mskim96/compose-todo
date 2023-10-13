@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmarks
-import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +23,7 @@ import com.example.mono.core.common.datetime.combineWithTime
 import com.example.mono.core.designsystem.component.MonoInputChip
 import com.example.mono.core.designsystem.icon.MonoIcons
 import com.example.mono.core.designsystem.theme.MonoTheme
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import java.time.LocalDate
 import java.time.LocalTime
 

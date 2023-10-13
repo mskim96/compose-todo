@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.mono.core.designsystem.anim.slideIntoUp
 import com.example.mono.core.designsystem.anim.slideOutOfDown
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import com.example.mono.feature.tasklist.EditTaskListRoute
 import com.example.mono.feature.tasklist.TaskListRoute
 

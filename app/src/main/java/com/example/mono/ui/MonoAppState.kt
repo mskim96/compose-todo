@@ -11,7 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.mono.core.data.repository.TaskListRepository
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 import com.example.mono.feature.bookmarks.navigation.navigateToBookmarks
 import com.example.mono.feature.calendar.navigation.navigateToCalendar
 import com.example.mono.feature.reminders.navigation.navigateToReminders

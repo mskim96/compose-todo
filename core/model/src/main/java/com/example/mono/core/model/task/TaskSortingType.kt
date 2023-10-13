@@ -1,4 +1,4 @@
-package com.example.mono.core.model
+package com.example.mono.core.model.task
 
 /**
  * Task sorting criterion

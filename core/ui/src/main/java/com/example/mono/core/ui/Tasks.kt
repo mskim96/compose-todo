@@ -4,7 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.tasks(

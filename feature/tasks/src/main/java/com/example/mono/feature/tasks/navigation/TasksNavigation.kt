@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.example.mono.core.model.Task
+import com.example.mono.core.model.task.Task
 import com.example.mono.feature.tasks.TasksRoute
 
 /**

@@ -8,9 +8,9 @@ import com.example.mono.core.common.scope.MonoDispatchers
 import com.example.mono.core.data.repository.SubTaskRepository
 import com.example.mono.core.data.repository.TaskListRepository
 import com.example.mono.core.data.repository.TaskRepository
-import com.example.mono.core.model.SubTask
-import com.example.mono.core.model.Task
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.SubTask
+import com.example.mono.core.model.task.Task
+import com.example.mono.core.model.task.TaskList
 import com.example.mono.feature.detail.navgation.TaskIdArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

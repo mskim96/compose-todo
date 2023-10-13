@@ -1,6 +1,6 @@
 package com.example.mono.feature.tasklist
 
-import com.example.mono.core.model.TaskList
+import com.example.mono.core.model.task.TaskList
 
 /**
  * A sealed hierarchy describing he state of the edit task lists.
