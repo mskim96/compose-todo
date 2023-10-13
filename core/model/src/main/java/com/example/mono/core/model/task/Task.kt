@@ -23,6 +23,7 @@ data class Task(
     val detail: String,
     val date: LocalDate? = null,
     val time: LocalTime? = null,
+    val color: Long = 0x00000000,
     val isCompleted: Boolean = false,
     val isBookmarked: Boolean = false,
     val subTasks: List<SubTask> = emptyList()

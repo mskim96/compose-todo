@@ -5,6 +5,10 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,14 +24,18 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.SubdirectoryArrowRight
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Checkbox
@@ -53,7 +61,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -66,6 +76,7 @@ import com.example.mono.core.designsystem.component.MonoTextField
 import com.example.mono.core.designsystem.component.MonoTopAppBar
 import com.example.mono.core.designsystem.icon.MonoIcons
 import com.example.mono.core.model.task.SubTask
+import com.example.mono.core.model.task.TaskColorPalette
 import com.example.mono.core.model.task.TaskList
 import com.example.mono.core.ui.IconRowItem
 import com.example.mono.core.ui.MonoDateTimePicker
@@ -102,6 +113,7 @@ internal fun TaskDetailRoute(
         onTitleChanged = viewModel::updateTitle,
         onDetailChanged = viewModel::updateDetail,
         onDateTimeSelected = viewModel::updateDateTime,
+        onTaskColorChanged = viewModel::updateTaskColor,
         onTaskCompletedChanged = viewModel::updateTaskCompleted,
         onTaskBookmarkChanged = viewModel::updateTaskBookmark,
         onTaskListSelected = viewModel::updateTaskList,
@@ -134,6 +146,7 @@ internal fun TaskDetailScreen(
     onTitleChanged: (title: String) -> Unit,
     onDetailChanged: (detail: String) -> Unit,
     onDateTimeSelected: (date: LocalDate?, time: LocalTime?) -> Unit,
+    onTaskColorChanged: (colorCode: Long) -> Unit,
     onTaskCompletedChanged: (Boolean) -> Unit,
     onTaskBookmarkChanged: (Boolean) -> Unit,
     onTaskListSelected: (TaskList?) -> Unit,
@@ -192,6 +205,7 @@ internal fun TaskDetailScreen(
             onTitleChanged = onTitleChanged,
             onDetailChanged = onDetailChanged,
             onDateTimeSelected = onDateTimeSelected,
+            onTaskColorChanged = onTaskColorChanged,
             showTaskListDialog = { showTaskListDialog = true },
             onCreateSubTask = onCreateSubTask,
             onSubTaskCompletedChanged = onSubTaskCompletedChanged,
@@ -227,6 +241,7 @@ internal fun TaskDetailContent(
     onTitleChanged: (title: String) -> Unit,
     onDetailChanged: (description: String) -> Unit,
     onDateTimeSelected: (date: LocalDate?, time: LocalTime?) -> Unit,
+    onTaskColorChanged: (colorCode: Long) -> Unit,
     showTaskListDialog: () -> Unit,
     onCreateSubTask: () -> Unit,
     onSubTaskCompletedChanged: (subTask: SubTask, isCompleted: Boolean) -> Unit,
@@ -270,6 +285,48 @@ internal fun TaskDetailContent(
             openDateTimeDialog = { showDateDialog = true },
             onDeleteDateTimeSelected = { onDateTimeSelected(null, null) }
         )
+        item {
+            IconRowItem(
+                iconContent = {
+                    Icon(imageVector = Icons.Outlined.Label, contentDescription = null)
+                },
+                onClick = {},
+                onClickEnabled = false,
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 40.dp)
+                        .padding(start = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    items(TaskColorPalette.values()) {
+                        val selected = it.color == taskDetailUiState.color
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(color = Color(it.color))
+                                .clickable {
+                                    onTaskColorChanged(it.color)
+                                }
+                        ) {
+                            if (selected) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.align(Alignment.Center),
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
         addEditSubTask(
             subTaskUiState = subTaskUiState,
             onCreateSubTask = onCreateSubTask,

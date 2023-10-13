@@ -73,6 +73,7 @@ class DefaultTaskRepository @Inject constructor(
         detail: String,
         date: LocalDate?,
         time: LocalTime?,
+        color: Long,
         taskListId: String?,
     ) {
         val task = getTask(taskId)?.copy(
@@ -80,6 +81,7 @@ class DefaultTaskRepository @Inject constructor(
             detail = detail,
             date = date,
             time = time,
+            color = color,
             taskListId = taskListId
         ) ?: throw Exception("Task (id $taskId) not found.")
 

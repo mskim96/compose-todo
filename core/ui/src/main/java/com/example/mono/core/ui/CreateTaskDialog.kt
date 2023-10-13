@@ -302,13 +302,17 @@ fun IconRowItem(
     iconContent: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onClickEnabled: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable () -> Unit
 ) {
     Surface(
         modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable(
+                enabled = onClickEnabled,
+                onClick = onClick
+            ),
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant
     ) {
         Row(

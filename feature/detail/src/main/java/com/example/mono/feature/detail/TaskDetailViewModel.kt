@@ -1,5 +1,6 @@
 package com.example.mono.feature.detail
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.example.mono.core.data.repository.TaskListRepository
 import com.example.mono.core.data.repository.TaskRepository
 import com.example.mono.core.model.task.SubTask
 import com.example.mono.core.model.task.Task
+import com.example.mono.core.model.task.TaskColorPalette
 import com.example.mono.core.model.task.TaskList
 import com.example.mono.feature.detail.navgation.TaskIdArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +38,7 @@ data class TaskDetailUiState(
     val isTaskBookmarked: Boolean = false,
     val date: LocalDate? = null,
     val time: LocalTime? = null,
+    val color: Long = TaskColorPalette.Burgundy.color,
     val taskList: TaskList? = null,
     val isLoading: Boolean = false,
     val isTaskSaved: Boolean = false,
@@ -137,6 +140,10 @@ class TaskDetailViewModel @Inject constructor(
         _taskUiState.update { it.copy(taskList = newTaskList) }
     }
 
+    fun updateTaskColor(newColor: Long) {
+        _taskUiState.update { it.copy(color = newColor) }
+    }
+
     fun createSubTask() {
         viewModelScope.launch(dispatcher) {
             subTaskRepository.createSubTask(taskId = taskId)
@@ -172,6 +179,7 @@ class TaskDetailViewModel @Inject constructor(
                 detail = taskUiState.value.detail,
                 date = taskUiState.value.date,
                 time = taskUiState.value.time,
+                color = taskUiState.value.color,
                 taskListId = taskUiState.value.taskList?.id
             )
         }
@@ -199,6 +207,7 @@ class TaskDetailViewModel @Inject constructor(
                         isTaskCompleted = currentTask.isCompleted,
                         date = currentTask.date,
                         time = currentTask.time,
+                        color = currentTask.color,
                         taskList = currentTaskList,
                         isLoading = false
                     )
@@ -222,6 +231,7 @@ class TaskDetailViewModel @Inject constructor(
                 currentState.isTaskBookmarked != snapshotTask?.isBookmarked ||
                 currentState.date != snapshotTask?.date ||
                 currentState.time != snapshotTask?.time ||
+                currentState.color != snapshotTask?.color ||
                 currentState.taskList?.id != snapshotTask?.taskListId
     }
 }

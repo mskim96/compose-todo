@@ -78,6 +78,7 @@ interface TaskRepository {
         detail: String,
         date: LocalDate?,
         time: LocalTime?,
+        color: Long,
         taskListId: String?
     )
 

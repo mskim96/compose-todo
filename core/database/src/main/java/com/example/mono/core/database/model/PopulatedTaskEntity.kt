@@ -24,6 +24,7 @@ fun PopulatedTaskEntity.asExternalModel() = Task(
     detail = task.detail,
     date = task.date,
     time = task.time,
+    color = task.color,
     isCompleted = task.isCompleted,
     isBookmarked = task.isBookmarked,
     subTasks = subTasks.map(SubTaskEntity::asExternalModel)
