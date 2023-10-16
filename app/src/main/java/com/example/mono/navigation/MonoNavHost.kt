@@ -42,6 +42,7 @@ fun MonoNavHost(
             openDrawer = openDrawer
         )
         calendarScreen(
+            onTaskClick = { task -> navController.navigateToTaskDetail(task.id) },
             openDrawer = openDrawer
         )
         taskListScreen(

@@ -7,6 +7,7 @@ import com.example.mono.core.database.dao.TaskDao
 import com.example.mono.core.database.model.PopulatedTaskEntity
 import com.example.mono.core.database.model.asExternalModel
 import com.example.mono.core.model.task.Task
+import com.example.mono.core.model.task.TaskColorPalette
 import com.example.mono.core.notifications.notifier.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -59,6 +60,7 @@ class DefaultTaskRepository @Inject constructor(
             detail = detail,
             date = date,
             time = time,
+            color = TaskColorPalette.Burgundy.color,
             isCompleted = false,
             isBookmarked = isBookmarked,
             taskListId = taskListId
