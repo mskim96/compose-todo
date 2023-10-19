@@ -1,4 +1,4 @@
-package com.example.mono.core.notifications
+package com.example.mono.core.data.notification
 
 import android.Manifest
 import android.app.Notification
@@ -14,8 +14,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
+import com.example.mono.core.common.R
+import com.example.mono.core.data.repository.TaskRepository
 import dagger.hilt.android.AndroidEntryPoint
-import com.example.mono.core.common.R as commonR
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val TARGET_ACTIVITY_NAME = "com.example.mono.MonoActivity"
 private const val TASK_NOTIFICATION_REQUEST_CODE = 0
@@ -28,7 +33,11 @@ private const val DEEP_LINK_SCHEME_AND_HOST = "mono://task_detail_route"
  */
 @AndroidEntryPoint
 class NotifyReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) = context?.run {
+
+    @Inject
+    lateinit var taskRepository: TaskRepository
+
+    override fun onReceive(context: Context, intent: Intent?) = context.run {
         // Check permission of notification.
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -47,7 +56,7 @@ class NotifyReceiver : BroadcastReceiver() {
 
         val taskNotification = createTaskNotification {
             setSmallIcon(
-                commonR.drawable.ic_mono_notification
+                R.drawable.ic_mono_notification
             )
                 .setContentTitle(title)
                 .setContentText(detail)
@@ -56,8 +65,11 @@ class NotifyReceiver : BroadcastReceiver() {
                 .setAutoCancel(true)
         }
         val notificationManager = NotificationManagerCompat.from(this)
+        CoroutineScope(Dispatchers.IO).launch {
+            taskRepository.completeNotification(taskId)
+        }
         notificationManager.notify(taskId.hashCode(), taskNotification)
-    } ?: Unit
+    }
 }
 
 /**
@@ -82,10 +94,10 @@ private fun Context.createTaskNotification(
 private fun Context.ensureNotificationChannelExists() {
     val channel = NotificationChannel(
         TASK_NOTIFICATION_CHANNEL_ID,
-        getString(R.string.task_notification_channel_name),
+        "Task for Todos",
         NotificationManager.IMPORTANCE_HIGH
     ).apply {
-        description = getString(R.string.task_notification_channel_description)
+        description = "Todo"
         lockscreenVisibility = NotificationCompat.VISIBILITY_PRIVATE
         enableVibration(true)
     }
@@ -106,4 +118,4 @@ private fun Context.taskPendingIntent(taskId: String) = PendingIntent.getActivit
     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 )
 
-private fun String.taskDeepLinkUri() = "$DEEP_LINK_SCHEME_AND_HOST/$this".toUri()
+private fun String.taskDeepLinkUri() = "${DEEP_LINK_SCHEME_AND_HOST}/$this".toUri()

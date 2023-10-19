@@ -26,6 +26,7 @@ data class Task(
     val color: Long = 0x00000000,
     val isCompleted: Boolean = false,
     val isBookmarked: Boolean = false,
+    val isPendingNotification: Boolean = false,
     val subTasks: List<SubTask> = emptyList()
 )
 

@@ -115,4 +115,6 @@ interface TaskRepository {
      * @param taskId the task id.
      */
     suspend fun deleteTask(taskId: String)
+
+    suspend fun completeNotification(taskId: String)
 }

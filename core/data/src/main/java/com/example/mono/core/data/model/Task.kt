@@ -15,5 +15,6 @@ fun Task.asEntity() = TaskEntity(
     time = time,
     color = color,
     isCompleted = isCompleted,
-    isBookmarked = isBookmarked
+    isBookmarked = isBookmarked,
+    isPendingNotification = isPendingNotification,
 )

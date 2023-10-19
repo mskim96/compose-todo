@@ -1,7 +1,7 @@
-package com.example.mono.core.notifications
+package com.example.mono.core.data.di
 
-import com.example.mono.core.notifications.notifier.Notifier
-import com.example.mono.core.notifications.notifier.SystemTrayNotifier
+import com.example.mono.core.data.notification.Notifier
+import com.example.mono.core.data.notification.SystemTrayNotifier
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

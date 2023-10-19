@@ -34,6 +34,7 @@ data class TaskEntity(
     val color: Long,
     val isCompleted: Boolean,
     val isBookmarked: Boolean,
+    val isPendingNotification: Boolean,
     val taskListId: String?
 )
 

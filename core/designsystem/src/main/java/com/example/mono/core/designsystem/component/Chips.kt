@@ -30,6 +30,7 @@ fun MonoInputChip(
     onClick: () -> Unit,
     label: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    leadingIcon: (@Composable () -> Unit)? = null,
     onTrailingIconClick: (() -> Unit)? = null,
 ) {
     InputChip(
@@ -41,6 +42,7 @@ fun MonoInputChip(
             }
         },
         modifier = modifier,
+        leadingIcon = leadingIcon,
         trailingIcon = if (onTrailingIconClick != null) {
             {
                 Icon(

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,7 +77,8 @@ fun TaskItem(
                     TaskDateTimeChip(
                         date = it,
                         time = task.time,
-                        onClick = { /*TODO*/ }
+                        onClick = { /*TODO*/ },
+                        isPendingNotification = task.isPendingNotification
                     )
                 }
             }
@@ -105,12 +108,20 @@ fun TaskDateTimeChip(
     time: LocalTime?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isPendingNotification: Boolean = false,
     onTrailingIconClick: (() -> Unit)? = null
 ) {
     MonoInputChip(
         onClick = onClick,
         label = { Text(text = date.combineWithTime(time)) },
         modifier = modifier,
+        leadingIcon = {
+            if (isPendingNotification) {
+                Icon(
+                    imageVector = Icons.Outlined.Alarm, contentDescription = null
+                )
+            }
+        },
         onTrailingIconClick = onTrailingIconClick
     )
 }

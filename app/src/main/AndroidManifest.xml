@@ -37,7 +37,7 @@
         </activity>
 
         <receiver
-            android:name=".core.notifications.NotifyReceiver"
+            android:name=".core.data.notification.NotifyReceiver"
             android:enabled="true"
             android:exported="false" />
     </application>

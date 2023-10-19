@@ -46,7 +46,6 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
     implementation(project(":core:network"))
-    implementation(project(":core:notifications"))
     implementation(project(":core:ui"))
 
     implementation(project(":feature:tasks"))

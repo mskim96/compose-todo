@@ -1,14 +1,15 @@
 package com.example.mono.core.data.repository
 
+import com.example.mono.core.common.datetime.dateTimeToMillis
 import com.example.mono.core.common.scope.Dispatcher
 import com.example.mono.core.common.scope.MonoDispatchers.Default
 import com.example.mono.core.data.model.asEntity
+import com.example.mono.core.data.notification.Notifier
 import com.example.mono.core.database.dao.TaskDao
 import com.example.mono.core.database.model.PopulatedTaskEntity
 import com.example.mono.core.database.model.asExternalModel
 import com.example.mono.core.model.task.Task
 import com.example.mono.core.model.task.TaskColorPalette
-import com.example.mono.core.notifications.notifier.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -63,7 +64,11 @@ class DefaultTaskRepository @Inject constructor(
             color = TaskColorPalette.Burgundy.color,
             isCompleted = false,
             isBookmarked = isBookmarked,
+            isPendingNotification = checkPendingNotification(date, time),
             taskListId = taskListId
+        )
+        notifier.setTaskNotification(
+            taskId, title, detail, date, time, task.isPendingNotification
         )
         taskDao.upsertTask(task.asEntity())
         return taskId
@@ -84,11 +89,13 @@ class DefaultTaskRepository @Inject constructor(
             date = date,
             time = time,
             color = color,
+            isPendingNotification = checkPendingNotification(date, time),
             taskListId = taskListId
         ) ?: throw Exception("Task (id $taskId) not found.")
-
+        notifier.setTaskNotification(
+            taskId, title, detail, date, time, task.isPendingNotification
+        )
         taskDao.upsertTask(task.asEntity())
-        setTaskNotification(task)
     }
 
     override suspend fun updateCompleteTask(taskId: String, completed: Boolean) {
@@ -115,9 +122,20 @@ class DefaultTaskRepository @Inject constructor(
         taskDao.deleteTask(taskId)
     }
 
-    private fun setTaskNotification(task: Task) {
-        if(task.date != null && task.time != null) {
-            notifier.setTaskNotification(task)
+    override suspend fun completeNotification(taskId: String) {
+        val task = getTask(taskId)?.copy(
+            isPendingNotification = false
+        ) ?: throw Exception("Task (id $taskId) not found.")
+        taskDao.upsertTask(task.asEntity())
+    }
+
+    private fun checkPendingNotification(date: LocalDate?, time: LocalTime?): Boolean {
+        return if (date != null && time != null) {
+            val currentTime = dateTimeToMillis(LocalDate.now(), LocalTime.now())
+            val dateTime = dateTimeToMillis(date, time)
+            currentTime < dateTime
+        } else {
+            false
         }
     }
 }
