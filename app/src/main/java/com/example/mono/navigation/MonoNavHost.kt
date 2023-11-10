@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.example.mono.feature.bookmarks.navigation.bookmarksScreen
 import com.example.mono.feature.calendar.navigation.calendarScreen
+import com.example.mono.feature.detail.navgation.attachmentsScreen
+import com.example.mono.feature.detail.navgation.navigateToAttachments
 import com.example.mono.feature.detail.navgation.navigateToTaskDetail
 import com.example.mono.feature.detail.navgation.taskDetail
 import com.example.mono.feature.reminders.navigation.remindersScreen
@@ -53,10 +55,19 @@ fun MonoNavHost(
             onBackClick = navController::navigateToTasks
         )
         taskDetail(
-            onBackClick = navController::popBackStack
+            onBackClick = navController::popBackStack,
+            navigateToAttachment = { taskId, attachment ->
+                navController.navigateToAttachments(
+                    taskId,
+                    attachment
+                )
+            }
         )
         settingsScreen(
             onBackClick = navController::popBackStack
+        )
+        attachmentsScreen(
+            onBackClick = { taskId, attachmentResult -> navController.navigateToTaskDetail(taskId, attachmentResult, navController.previousBackStackEntry?.destination?.route ?: "")}
         )
     }
 }

@@ -79,7 +79,9 @@ interface TaskRepository {
         date: LocalDate?,
         time: LocalTime?,
         color: Long,
-        taskListId: String?
+        taskListId: String?,
+        attachments: List<String>,
+        recorders: List<String>
     )
 
     /**
@@ -117,4 +119,8 @@ interface TaskRepository {
     suspend fun deleteTask(taskId: String)
 
     suspend fun completeNotification(taskId: String)
+
+    suspend fun updateAttachments(taskId: String, attachments: List<String>)
+
+    suspend fun updateRecord(taskId: String, recordUri: List<String>)
 }

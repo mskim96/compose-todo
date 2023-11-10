@@ -82,6 +82,8 @@ class DefaultTaskRepository @Inject constructor(
         time: LocalTime?,
         color: Long,
         taskListId: String?,
+        attachments: List<String>,
+        recorders: List<String>
     ) {
         val task = getTask(taskId)?.copy(
             title = title,
@@ -90,7 +92,9 @@ class DefaultTaskRepository @Inject constructor(
             time = time,
             color = color,
             isPendingNotification = checkPendingNotification(date, time),
-            taskListId = taskListId
+            taskListId = taskListId,
+            attachments = attachments,
+            recorders = recorders
         ) ?: throw Exception("Task (id $taskId) not found.")
         notifier.setTaskNotification(
             taskId, title, detail, date, time, task.isPendingNotification
@@ -125,6 +129,20 @@ class DefaultTaskRepository @Inject constructor(
     override suspend fun completeNotification(taskId: String) {
         val task = getTask(taskId)?.copy(
             isPendingNotification = false
+        ) ?: throw Exception("Task (id $taskId) not found.")
+        taskDao.upsertTask(task.asEntity())
+    }
+
+    override suspend fun updateAttachments(taskId: String, attachments: List<String>) {
+        val task = getTask(taskId)?.copy(
+            attachments = attachments
+        ) ?: throw Exception("Task (id $taskId) not found.")
+        taskDao.upsertTask(task.asEntity())
+    }
+
+    override suspend fun updateRecord(taskId: String, recordUri: List<String>) {
+        val task = getTask(taskId)?.copy(
+            recorders = recordUri
         ) ?: throw Exception("Task (id $taskId) not found.")
         taskDao.upsertTask(task.asEntity())
     }

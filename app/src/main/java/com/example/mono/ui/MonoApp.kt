@@ -64,6 +64,7 @@ fun MonoApp(
                 currentDestination = appState.currentDestination,
                 closeDrawer = { appState.coroutineScope.launch { drawerState.close() } })
         },
+        gesturesEnabled = appState.currentDestination.isTopLevelDestinationInHierarchy(),
     ) {
         MonoNavHost(
             appState = appState,
@@ -276,3 +277,12 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
     this?.hierarchy?.any {
         it.route?.contains(destination.name, true) ?: false
     } ?: false
+
+private fun NavDestination?.isTopLevelDestinationInHierarchy(): Boolean {
+    val topLevels = TopLevelDestination.values()
+    return topLevels.any { topLevelDestination ->
+        this?.hierarchy?.any {
+            it.route?.contains(topLevelDestination.name, false) ?: false
+        } ?: false
+    }
+}

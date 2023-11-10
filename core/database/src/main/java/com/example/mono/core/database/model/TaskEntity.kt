@@ -35,7 +35,9 @@ data class TaskEntity(
     val isCompleted: Boolean,
     val isBookmarked: Boolean,
     val isPendingNotification: Boolean,
-    val taskListId: String?
+    val taskListId: String?,
+    val attachments: List<String> = emptyList(),
+    val recorders: List<String> = emptyList()
 )
 
 fun TaskEntity.asExternalModel() = Task(

@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.activity.compose)
+    implementation(libs.accompanist.permissions)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext)

@@ -17,4 +17,6 @@ fun Task.asEntity() = TaskEntity(
     isCompleted = isCompleted,
     isBookmarked = isBookmarked,
     isPendingNotification = isPendingNotification,
+    attachments = attachments,
+    recorders = recorders
 )

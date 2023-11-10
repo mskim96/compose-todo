@@ -27,7 +27,9 @@ data class Task(
     val isCompleted: Boolean = false,
     val isBookmarked: Boolean = false,
     val isPendingNotification: Boolean = false,
-    val subTasks: List<SubTask> = emptyList()
+    val subTasks: List<SubTask> = emptyList(),
+    val attachments: List<String> = emptyList(),
+    val recorders: List<String> = emptyList()
 )
 
 /**

@@ -86,12 +86,14 @@ fun MonoModalNavigationDrawer(
     drawerContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    gesturesEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
         drawerContent = drawerContent,
         modifier = modifier,
         drawerState = drawerState,
+        gesturesEnabled = gesturesEnabled,
         content = content
     )
 }

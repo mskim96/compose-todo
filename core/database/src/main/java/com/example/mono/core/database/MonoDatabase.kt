@@ -9,7 +9,7 @@ import com.example.mono.core.database.dao.TaskListDao
 import com.example.mono.core.database.model.SubTaskEntity
 import com.example.mono.core.database.model.TaskEntity
 import com.example.mono.core.database.model.TaskListEntity
-import com.example.mono.core.database.util.DateTimeConverter
+import com.example.mono.core.database.util.Converters
 
 /**
  * [MonoDatabase] is Room Database for App.
@@ -25,7 +25,7 @@ import com.example.mono.core.database.util.DateTimeConverter
     version = 1,
     exportSchema = false
 )
-@TypeConverters(DateTimeConverter::class)
+@TypeConverters(Converters::class)
 abstract class MonoDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun subTaskDao(): SubTaskDao

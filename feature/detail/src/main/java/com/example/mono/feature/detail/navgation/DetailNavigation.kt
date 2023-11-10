@@ -31,8 +31,16 @@ internal class TaskIdArgs(val taskId: String) {
 /**
  * Navigate to task detail screen.
  */
-fun NavController.navigateToTaskDetail(taskId: String) {
-    this.navigate("$taskDetailRoute/$taskId")
+fun NavController.navigateToTaskDetail(taskId: String, attachmentResult: String? = null, popupDestination: String = "") {
+    attachmentResult?.let {
+        this.navigate("$taskDetailRoute/$taskId?attachment=$it") {
+            popUpTo(popupDestination) {
+                inclusive = true
+            }
+        }
+    } ?: this.navigate("$taskDetailRoute/$taskId") {
+
+    }
 }
 
 /**
@@ -42,18 +50,21 @@ fun NavController.navigateToTaskDetail(taskId: String) {
  */
 fun NavGraphBuilder.taskDetail(
     onBackClick: () -> Unit,
+    navigateToAttachment: (String, String) -> Unit,
 ) {
     composable(
-        route = "$taskDetailRoute/{$taskIdArgs}",
+        route = "$taskDetailRoute/{$taskIdArgs}?attachment={attachment}",
         arguments = listOf(
-            navArgument(taskIdArgs) { type = NavType.StringType }
+            navArgument(taskIdArgs) { type = NavType.StringType },
+            navArgument("attachment") { nullable = true }
         ),
         deepLinks = listOf(
             navDeepLink { uriPattern = DEEP_LINK_URI_PATTERN }
         )
     ) {
         TaskDetailRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            navigateToAttachment = navigateToAttachment,
         )
     }
 }

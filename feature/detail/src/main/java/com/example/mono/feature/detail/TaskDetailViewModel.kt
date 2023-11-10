@@ -1,6 +1,5 @@
 package com.example.mono.feature.detail
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +41,9 @@ data class TaskDetailUiState(
     val taskList: TaskList? = null,
     val isLoading: Boolean = false,
     val isTaskSaved: Boolean = false,
-    val isTaskDeleted: Boolean = false
+    val isTaskDeleted: Boolean = false,
+    val attachments: List<String> = emptyList(),
+    val recorders: List<String> = emptyList()
 )
 
 @HiltViewModel
@@ -55,7 +56,8 @@ class TaskDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Task id from navigation back stack entry.
-    private val taskId = TaskIdArgs(savedStateHandle).taskId
+    val taskId = TaskIdArgs(savedStateHandle).taskId
+    val deleteAttachmentId = savedStateHandle.getStateFlow("attachment", "")
 
     // Initial snapshot for detecting changes in task.
     private var snapshotTask: Task? = null
@@ -171,6 +173,63 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    fun updateAttachment(imageUrlList: List<String>) {
+        val previousImageUrlList = _taskUiState.value.attachments.toMutableList()
+        viewModelScope.launch {
+            taskRepository.updateAttachments(taskId, previousImageUrlList + imageUrlList)
+            _taskUiState.update {
+                it.copy(
+                    attachments = previousImageUrlList + imageUrlList
+                )
+            }
+        }
+    }
+
+    fun deleteAttachment(imageUrl: String) {
+        _taskUiState.update { state ->
+            state.copy(
+                attachments = _taskUiState.value.attachments.filterNot { deleteAttachmentId.value != imageUrl }
+            )
+        }
+    }
+
+    fun updateAttachmentFromCamera(imageUrl: String) {
+        val previousImageUrlList = _taskUiState.value.attachments.toMutableList()
+        viewModelScope.launch {
+            taskRepository.updateAttachments(taskId, previousImageUrlList + imageUrl)
+            _taskUiState.update {
+                it.copy(
+                    attachments = previousImageUrlList + imageUrl
+                )
+            }
+        }
+    }
+
+    fun createRecord(recordUrl: String) {
+        val previousRecords = _taskUiState.value.recorders
+        viewModelScope.launch {
+            taskRepository.updateRecord(taskId, previousRecords + recordUrl)
+            _taskUiState.update {
+                it.copy(
+                    recorders = previousRecords + recordUrl
+                )
+            }
+        }
+    }
+
+    fun deleteRecord(recordUrl: String) {
+        val currentRecords = _taskUiState.value.recorders
+        val remainRecords = currentRecords.filterNot { it == recordUrl }
+        viewModelScope.launch {
+            taskRepository.updateRecord(taskId, currentRecords.filterNot { it == recordUrl })
+            _taskUiState.update {
+                it.copy(
+                    recorders = remainRecords
+                )
+            }
+        }
+    }
+
     private fun updateTask() {
         viewModelScope.launch {
             taskRepository.updateTask(
@@ -180,7 +239,9 @@ class TaskDetailViewModel @Inject constructor(
                 date = taskUiState.value.date,
                 time = taskUiState.value.time,
                 color = taskUiState.value.color,
-                taskListId = taskUiState.value.taskList?.id
+                taskListId = taskUiState.value.taskList?.id,
+                attachments = taskUiState.value.attachments,
+                recorders = taskUiState.value.recorders
             )
         }
     }
@@ -209,6 +270,8 @@ class TaskDetailViewModel @Inject constructor(
                         time = currentTask.time,
                         color = currentTask.color,
                         taskList = currentTaskList,
+                        attachments = currentTask.attachments,
+                        recorders = currentTask.recorders,
                         isLoading = false
                     )
                 }
@@ -232,7 +295,9 @@ class TaskDetailViewModel @Inject constructor(
                 currentState.date != snapshotTask?.date ||
                 currentState.time != snapshotTask?.time ||
                 currentState.color != snapshotTask?.color ||
-                currentState.taskList?.id != snapshotTask?.taskListId
+                currentState.taskList?.id != snapshotTask?.taskListId ||
+                currentState.attachments != snapshotTask?.attachments ||
+                currentState.recorders != snapshotTask?.recorders
     }
 }
 
